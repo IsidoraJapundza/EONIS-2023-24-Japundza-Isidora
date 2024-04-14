@@ -1,0 +1,6 @@
+@EONIS_IT34_2020_HostAddress = http://localhost:5108
+
+GET {{EONIS_IT34_2020_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
