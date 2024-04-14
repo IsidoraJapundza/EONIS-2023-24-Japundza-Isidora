@@ -1,6 +1,0 @@
-@EONIS_IT34_2020_HostAddress = http://localhost:5214
-
-GET {{EONIS_IT34_2020_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
