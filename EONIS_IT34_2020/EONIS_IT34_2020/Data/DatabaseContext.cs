@@ -6,6 +6,7 @@ namespace EONIS_IT34_2020.Data
     public class DatabaseContext : DbContext
     {
         private readonly IConfiguration configuration;
+        private readonly static int iterations = 1000;
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options, IConfiguration configuration) : base(options)
         {
@@ -18,11 +19,11 @@ namespace EONIS_IT34_2020.Data
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("ConnectionString"));
         }
 
-        public DbSet<Administrator> Administratori { get; set; }
-        public DbSet<Dogadjaj> Dogadjaji { get; set; }
-        public DbSet<KontigentKarata> KontigentiKarata { get; set; }
-        public DbSet<Korisnik> Korisnici { get; set; }
-        public DbSet<Porudzbina> Porudzbine { get; set; }
+        public DbSet<Administrator> Administrator { get; set; }
+        public DbSet<Dogadjaj> Dogadjaj { get; set; }
+        public DbSet<KontigentKarata> KontigentKarata { get; set; }
+        public DbSet<Korisnik> Korisnik { get; set; }
+        public DbSet<Porudzbina> Porudzbina { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

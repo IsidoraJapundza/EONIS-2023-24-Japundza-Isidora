@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Auth\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
 

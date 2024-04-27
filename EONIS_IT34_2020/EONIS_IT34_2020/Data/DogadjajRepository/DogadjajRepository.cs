@@ -22,17 +22,17 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
 
         public List<Dogadjaj> GetDogadjaj()
         {
-            return this.context.Dogadjaji.ToList();
+            return this.context.Dogadjaj.ToList();
         }
 
         public Dogadjaj GetDogadjajById(Guid Id_dogadjaj)
         {
-            return context.Dogadjaji.FirstOrDefault(e => e.Id_dogadjaj == Id_dogadjaj);
+            return context.Dogadjaj.FirstOrDefault(e => e.Id_dogadjaj == Id_dogadjaj);
         }
 
         public Dogadjaj CreateDogadjaj(Dogadjaj dogadjaj)
         {
-            var createdDogadjaj = context.Dogadjaji.Add(dogadjaj);
+            var createdDogadjaj = this.context.Dogadjaj.Add(dogadjaj);
             this.context.SaveChanges();
             return mapper.Map<Dogadjaj>(createdDogadjaj.Entity);
         }
@@ -48,7 +48,8 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
         public void DeleteDogadjaj(Guid Id_dogadjaj)
         {
             var deletedDogadjaj = GetDogadjajById(Id_dogadjaj);
-            context.Remove(deletedDogadjaj);
+            this.context.Remove(deletedDogadjaj);
+            this.context.SaveChanges();
         }
     }
 }

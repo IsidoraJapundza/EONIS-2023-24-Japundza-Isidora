@@ -22,17 +22,17 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
 
         public List<KontigentKarata> GetKontigentKarata()
         {
-            return this.context.KontigentiKarata.ToList();
+            return this.context.KontigentKarata.ToList();
         }
 
         public KontigentKarata GetKontigentKarataById(Guid Id_kontigentKarata)
         {
-            return context.KontigentiKarata.FirstOrDefault(e => e.Id_kontigentKarata == Id_kontigentKarata);
+            return context.KontigentKarata.FirstOrDefault(e => e.Id_kontigentKarata == Id_kontigentKarata);
         }
 
         public KontigentKarata CreateKontigentKarata(KontigentKarata kontigentKarata)
         {
-            var createdKontigentKarata = context.KontigentiKarata.Add(kontigentKarata);
+            var createdKontigentKarata = this.context.KontigentKarata.Add(kontigentKarata);
             this.context.SaveChanges();
             return mapper.Map<KontigentKarata>(createdKontigentKarata.Entity);
         }
@@ -48,7 +48,8 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
         public void DeleteKontigentKarata(Guid Id_kontigentKarata)
         {
             var deletedKontigentKarata = GetKontigentKarataById(Id_kontigentKarata);
-            context.Remove(deletedKontigentKarata);
+            this.context.Remove(deletedKontigentKarata);
+            this.context.SaveChanges();
         }
     }
 }

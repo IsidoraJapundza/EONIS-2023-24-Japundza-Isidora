@@ -1,8 +1,13 @@
-﻿namespace EONIS_IT34_2020.Models.Entities
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EONIS_IT34_2020.Models.Entities
 {
+    [Table("Porudzbina")]
+    [PrimaryKey(nameof(Id_korisnik), nameof(Id_kontigentKarata))]
     public class Porudzbina
     {
-        public Guid Id_porudzbina { get; set; }
         public DateOnly DatumPorudzbine { get; set; }
         public TimeOnly VremePorudzbine { get; set; }
         public int BrojKarata { get; set; }

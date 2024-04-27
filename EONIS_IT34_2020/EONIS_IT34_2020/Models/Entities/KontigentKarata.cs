@@ -1,7 +1,12 @@
-﻿namespace EONIS_IT34_2020.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EONIS_IT34_2020.Models.Entities
 {
+    [Table("KontigentKarata")]
     public class KontigentKarata
     {
+        [Key]
         public Guid Id_kontigentKarata { get; set; }
         public String NazivKarte { get; set; }
         public String Sektor { get; set; }

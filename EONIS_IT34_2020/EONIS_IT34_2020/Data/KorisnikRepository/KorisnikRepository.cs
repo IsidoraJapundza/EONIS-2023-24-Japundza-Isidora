@@ -23,20 +23,29 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
 
         public List<Korisnik> GetKorisnik()
         {
-            return this.context.Korisnici.ToList();
+            return this.context.Korisnik.ToList();
         }
 
         public Korisnik GetKorisnikById(Guid Id_korisnik)
         {
-            return context.Korisnici.FirstOrDefault(e => e.Id_korisnik == Id_korisnik);
+            return context.Korisnik.FirstOrDefault(e => e.Id_korisnik == Id_korisnik);
+        }
+
+        public Korisnik GetKorisnikByKorisnickoIme(string korisnickoImeKorisnika)
+        {
+            return context.Korisnik.FirstOrDefault(e => e.KorisnickoImeKorisnika == korisnickoImeKorisnika);
         }
 
         public Korisnik CreateKorisnik(KorisnikCreationDto korisnik)
         {
             Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
             korisnikEntity.Id_korisnik = Guid.NewGuid();
-            // lozinka 
-            var createdKorisnik = context.Korisnici.Add(korisnikEntity);
+            /* lozinka 
+            var lozinkaKorisnikaHashed = HashPassword(administrator.LozinkaKorisnika);
+            korisnikEntity.lozinkaKorisnikaHashed = Convert.FromBase64String(lozinkaKorisnikaHashed.Item1);
+            korisnikEntity.saltKorisnikaa = Convert.FromBase64String(lozinkaKorisnikaHashed.Item2);
+            */
+            var createdKorisnik = this.context.Korisnik.Add(korisnikEntity);
             return mapper.Map<Korisnik>(createdKorisnik.Entity);
         }
 
@@ -51,7 +60,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         public void DeleteKorisnik(Guid Id_korisnik)
         {
             var deletedKorisnik = GetKorisnikById(Id_korisnik);
-            context.Remove(deletedKorisnik);
+            this.context.Remove(deletedKorisnik);
         }
     }
 }

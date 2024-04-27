@@ -22,17 +22,19 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
 
         public List<Porudzbina> GetPorudzbina()
         {
-            return this.context.Porudzbine.ToList();
+            return this.context.Porudzbina.ToList();
         }
 
-        public Porudzbina GetPorudzbinaById(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontigentKarata)
+        public Porudzbina GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontigentKarata)
         {
-            return context.Porudzbine.FirstOrDefault(e => (e.Id_porudzbina == Id_porudzbina && e.Id_korisnik == Id_korisnik && e.Id_kontigentKarata == Id_kontigentKarata));
+            return context.Porudzbina.FirstOrDefault(e => (e.Id_korisnik == Id_korisnik && e.Id_kontigentKarata == Id_kontigentKarata));
         }
+
+
 
         public Porudzbina CreatePorudzbina(Porudzbina porudzbina)
         {
-            var createdPorudzbina = this.context.Porudzbine.Add(porudzbina);
+            var createdPorudzbina = this.context.Porudzbina.Add(porudzbina);
             this.context.SaveChanges();
             return mapper.Map<Porudzbina>(createdPorudzbina.Entity);
         }
@@ -45,9 +47,9 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             */
         }
 
-        public void DeletePorudzbina(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontigentKarata)
+        public void DeletePorudzbina(Guid Id_korisnik, Guid Id_kontigentKarata)
         {
-            var deletedPorudzbina = GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontigentKarata);
+            var deletedPorudzbina = GetPorudzbinaById(Id_korisnik, Id_kontigentKarata);
             context.Remove(deletedPorudzbina);
             this.context.SaveChanges();
         }
