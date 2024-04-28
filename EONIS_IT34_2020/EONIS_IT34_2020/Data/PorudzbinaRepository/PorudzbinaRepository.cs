@@ -6,10 +6,10 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
 {
     public class PorudzbinaRepository : IPorudzbinaRepository
     {
-        public readonly DatabaseContext context;
+        public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
 
-        public PorudzbinaRepository(DatabaseContext context, IMapper mapper)
+        public PorudzbinaRepository(DatabaseContextDB context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;

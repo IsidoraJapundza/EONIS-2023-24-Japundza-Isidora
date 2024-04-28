@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EONIS_IT34_2020.Data
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContextDB : DbContext
     {
         private readonly IConfiguration configuration;
-        private readonly static int iterations = 1000;
+        //private readonly static int iterations = 1000;
 
-        public DatabaseContext(DbContextOptions<DatabaseContext> options, IConfiguration configuration) : base(options)
+        public DatabaseContextDB(DbContextOptions<DatabaseContextDB> options, IConfiguration configuration) : base(options)
         {
             this.configuration = configuration;
 

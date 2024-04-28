@@ -7,11 +7,11 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
 {
     public class AdministratorRepository : IAdministratorRepository
     {
-        public readonly DatabaseContext context;
+        public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
         //private readonly static int iterations = 1000;
 
-        public AdministratorRepository(DatabaseContext context, IMapper mapper)
+        public AdministratorRepository(DatabaseContextDB context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;

@@ -6,10 +6,10 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
 {
     public class DogadjajRepository : IDogadjajRepository
     {
-        public readonly DatabaseContext context;
+        public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
 
-        public DogadjajRepository(DatabaseContext context, IMapper mapper)
+        public DogadjajRepository(DatabaseContextDB context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;

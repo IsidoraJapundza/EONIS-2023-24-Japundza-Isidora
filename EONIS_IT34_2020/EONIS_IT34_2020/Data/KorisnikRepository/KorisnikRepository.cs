@@ -7,10 +7,10 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
 {
     public class KorisnikRepository : IKorisnikRepository
     {
-        public readonly DatabaseContext context;
+        public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
 
-        public KorisnikRepository(DatabaseContext context, IMapper mapper)
+        public KorisnikRepository(DatabaseContextDB context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;

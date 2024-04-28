@@ -6,10 +6,10 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
 {
     public class KontigentKarataRepository : IKontigentKarataRepository
     {
-        public readonly DatabaseContext context;
+        public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
 
-        public KontigentKarataRepository(DatabaseContext context, IMapper mapper)
+        public KontigentKarataRepository(DatabaseContextDB context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
