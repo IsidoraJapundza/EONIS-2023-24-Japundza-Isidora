@@ -68,10 +68,10 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         [HttpGet("{KorisnickoImeAdministratora}")]
-        public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string korisnickoImeAdministratora)
+        public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string korisnickoIme)
         {
            
-            var administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoImeAdministratora);
+            var administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoIme);
 
             if (administrator == null)
             {

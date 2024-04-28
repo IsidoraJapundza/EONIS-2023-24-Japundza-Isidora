@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EONIS_IT34_2020.Models.Entities
 {
-    [Table("Administrator")]
     public class Administrator
     {
         [Key]
@@ -12,7 +11,7 @@ namespace EONIS_IT34_2020.Models.Entities
         public String PrezimeAdministratora { get; set; }
         public String KorisnickoImeAdministratora { get; set; }
         public String MejlAdministratora { get; set; }
-        public byte[] LozinkaAdministratoraHashed { get; set; } // hash
+        public byte[] LozinkaAdministratoraHashed { get; set; } 
         public byte[] saltAdministratora { get; set; }
         public String KontaktAdministratora { get; set; }
         public Boolean StatusAktivnosti { get; set; }

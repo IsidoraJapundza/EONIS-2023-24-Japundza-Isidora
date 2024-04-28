@@ -22,12 +22,13 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
 
         public List<KontigentKarata> GetKontigentKarata()
         {
+            
             return this.context.KontigentKarata.ToList();
         }
 
         public KontigentKarata GetKontigentKarataById(Guid Id_kontigentKarata)
         {
-            return context.KontigentKarata.FirstOrDefault(e => e.Id_kontigentKarata == Id_kontigentKarata);
+            return this.context.KontigentKarata.FirstOrDefault(e => e.Id_kontigentKarata == Id_kontigentKarata);
         }
 
         public KontigentKarata CreateKontigentKarata(KontigentKarata kontigentKarata)

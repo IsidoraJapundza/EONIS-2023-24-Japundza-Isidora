@@ -37,15 +37,43 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
             return mapper.Map<Dogadjaj>(createdDogadjaj.Entity);
         }
 
-        public void UpdateDogadjaj(Dogadjaj dogadjaj)
+        /*public void UpdateDogadjaj(Dogadjaj dogadjaj)
         {
             /*
                Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze
                i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-            */
+            
+        }*/
+
+        public Dogadjaj UpdateDogadjaj(Dogadjaj dogadjaj)
+        {
+            try
+            {
+                var existingDogadjaj = this.context.Dogadjaj.FirstOrDefault(e => e.Id_dogadjaj == dogadjaj.Id_dogadjaj);
+
+                if (existingDogadjaj != null)
+                {
+                    existingDogadjaj.NazivSportskogDogadjaja = dogadjaj.NazivSportskogDogadjaja;
+                    existingDogadjaj.DatumOdrzavanja = dogadjaj.DatumOdrzavanja;
+                    existingDogadjaj.VremeOdrzavanja = dogadjaj.VremeOdrzavanja;
+                    existingDogadjaj.PredvidjenoVremeZavrsetka = dogadjaj.PredvidjenoVremeZavrsetka;
+                    existingDogadjaj.MestoOdrzavanja = dogadjaj.MestoOdrzavanja;
+                    this.context.SaveChanges();
+
+                    return existingDogadjaj;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Dogadjaj with ID {dogadjaj.Id_dogadjaj} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating Dogadjaj.", ex);
+            }
         }
 
-        public void DeleteDogadjaj(Guid Id_dogadjaj)
+    public void DeleteDogadjaj(Guid Id_dogadjaj)
         {
             var deletedDogadjaj = GetDogadjajById(Id_dogadjaj);
             this.context.Remove(deletedDogadjaj);

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.AdministratorRepository;
 using EONIS_IT34_2020.Data.DogadjajRepository;
-using EONIS_IT34_2020.Models.DTOs.Administrator;
 using EONIS_IT34_2020.Models.DTOs.Dogadjaj;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -112,6 +110,8 @@ namespace EONIS_IT34_2020.Controllers
         {
             try
             {
+                Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
+
                 var dogadjajEntity = dogadjajRepository.GetDogadjajById(dogadjajUpdateDto.Id_dogadjaj);
 
                 if (dogadjajEntity == null)

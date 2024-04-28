@@ -2,6 +2,7 @@
 using EONIS_IT34_2020.Models.DTOs.Administrator;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
+using System.Security.Cryptography;
 
 namespace EONIS_IT34_2020.Data.AdministratorRepository
 {
@@ -9,7 +10,7 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
     {
         public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
-        //private readonly static int iterations = 1000;
+        private readonly static int iterations = 1000;
 
         public AdministratorRepository(DatabaseContextDB context, IMapper mapper)
         {
@@ -32,9 +33,9 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
             return context.Administrator.FirstOrDefault(e => e.Id_administrator == Id_administrator);
         }
 
-        public Administrator GetAdministratorByKorisnickoIme(string korisnickoImeAdministratora)
+        public Administrator GetAdministratorByKorisnickoIme(string korisnickoIme)
         {
-            return context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoImeAdministratora);
+            return context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoIme);
         }
 
         public Administrator CreateAdministrator(AdministratorCreationDto administrator)
@@ -64,11 +65,11 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
             this.context.Remove(deletedAdministrator);
         }
 
-        public void DeleteAdministrator(string korisnickoImeAdministratora)
+        public void DeleteAdministrator(string korisnickoIme)
         {
             try
             {
-                var administrator = context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoImeAdministratora);
+                var administrator = context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoIme);
 
                 if(administrator != null)
                 {
@@ -77,13 +78,55 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"Administrator with username {korisnickoImeAdministratora} not found.");
+                    throw new KeyNotFoundException($"Administrator with username {korisnickoIme} not found.");
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("Error deleting Administrator!", ex);
             }
+        }
+
+        public bool AdministratorWithCredentialsExists(string korisnickoIme, string lozinka)
+        {
+            Administrator administrator = context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoIme);
+
+            if(administrator == null)
+            {
+                return false;
+            }
+            if(VerifyPassword(lozinka, Convert.ToBase64String(administrator.LozinkaAdministratoraHashed), administrator.saltAdministratora))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // helpers
+        public bool VerifyPassword(string lozinka, string lozinkaHashed, byte[] salt)
+        {
+            var saltBytes = salt;
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(lozinka, saltBytes, iterations);
+            if (Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == lozinkaHashed)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        private Tuple<string, string> HashPassword(string lozinka)
+        {
+            var sBytes = new byte[lozinka.Length];
+            new RNGCryptoServiceProvider().GetNonZeroBytes(sBytes);
+            var salt = Convert.ToBase64String(sBytes);
+
+            var derivedBytes = new Rfc2898DeriveBytes(lozinka, sBytes, iterations);
+
+            return new Tuple<string, string>
+            (
+                Convert.ToBase64String(derivedBytes.GetBytes(256)),
+                salt
+            );
         }
     }
 }

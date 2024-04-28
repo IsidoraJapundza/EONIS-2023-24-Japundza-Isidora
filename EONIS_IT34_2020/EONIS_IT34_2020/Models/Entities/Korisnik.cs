@@ -11,7 +11,7 @@ namespace EONIS_IT34_2020.Models.Entities
         public String ImeKorisnika { get; set; }
         public String PrezimeKorisnika { get; set; }
         public String KorisnickoImeKorisnika { get; set; }
-        public byte[] LozinkaKorisnikaHashed { get; set; } // hash
+        public byte[] LozinkaKorisnikaHashed { get; set; }         
         public byte[] saltKorisnika { get; set; }   
         public String MejlKorisnika { get; set; }
         public String KontaktKorisnika { get; set; }

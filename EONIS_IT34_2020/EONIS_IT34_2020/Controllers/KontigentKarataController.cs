@@ -46,10 +46,11 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
         [HttpGet("{Id_kontigentKarata}")]
         public ActionResult<KontigentKarata> GetKontigentKarataById(Guid Id_kontigentKarata)
         {
-            KontigentKarata kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
+            var kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
 
             if (kontigentKarata == null)
             {
@@ -66,6 +67,11 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<KontigentKarataDto> CreateKontigentKarata([FromBody] KontigentKarataCreationDto kontigentKarataCreationDto)
         {
+            if(kontigentKarataCreationDto == null)
+            {
+                return BadRequest("Invalid data provided!");
+            }
+
             try
             {
                 KontigentKarata kontigentKarataEntity = mapper.Map<KontigentKarata>(kontigentKarataCreationDto);

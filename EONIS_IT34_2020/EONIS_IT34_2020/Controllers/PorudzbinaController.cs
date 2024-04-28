@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.DogadjajRepository;
 using EONIS_IT34_2020.Data.PorudzbinaRepository;
-using EONIS_IT34_2020.Models.DTOs.Dogadjaj;
 using EONIS_IT34_2020.Models.DTOs.Porudzbina;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -48,7 +46,7 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = "Administrator, Korisnik")]
+        //[Authorize(Roles = "Administrator, Korisnik")]
         [HttpGet("{Id_korisnik}/{Id_kontigentKarata}")]
         public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontigentKarata)
         {

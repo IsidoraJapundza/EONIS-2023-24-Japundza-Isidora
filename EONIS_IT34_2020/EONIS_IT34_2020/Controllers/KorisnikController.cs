@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.AdministratorRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
-using EONIS_IT34_2020.Models.DTOs.Administrator;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -69,10 +67,10 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         [HttpGet("{KorisnickoImeKorisnika}")]
-        public ActionResult<KorisnikDto> GetKorisnikByKorisnickoIme(string korisnickoImeKorisnika)
+        public ActionResult<KorisnikDto> GetKorisnikByKorisnickoIme(string korisnickoIme)
         {
 
-            var korisnik = korisnikRepository.GetKorisnikByKorisnickoIme(korisnickoImeKorisnika);
+            var korisnik = korisnikRepository.GetKorisnikByKorisnickoIme(korisnickoIme);
 
             if (korisnik == null)
             {

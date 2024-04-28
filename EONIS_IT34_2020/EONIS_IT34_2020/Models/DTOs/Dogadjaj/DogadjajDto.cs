@@ -2,6 +2,7 @@
 {
     public class DogadjajDto
     {
+        public Guid Id_dogadjaj { get; set; }
         public String NazivSportskogDogadjaja { get; set; }
         public DateOnly DatumOdrzavanja { get; set; }
         public TimeOnly VremeOdrzavanja { get; set; }

@@ -2,6 +2,7 @@
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 
 namespace EONIS_IT34_2020.Data.KorisnikRepository
 {
@@ -9,6 +10,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
     {
         public readonly DatabaseContextDB context;
         public readonly IMapper mapper;
+        private readonly static int iterations = 1000;
 
         public KorisnikRepository(DatabaseContextDB context, IMapper mapper)
         {
@@ -31,9 +33,9 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
             return context.Korisnik.FirstOrDefault(e => e.Id_korisnik == Id_korisnik);
         }
 
-        public Korisnik GetKorisnikByKorisnickoIme(string korisnickoImeKorisnika)
+        public Korisnik GetKorisnikByKorisnickoIme(string korisnickoIme)
         {
-            return context.Korisnik.FirstOrDefault(e => e.KorisnickoImeKorisnika == korisnickoImeKorisnika);
+            return context.Korisnik.FirstOrDefault(e => e.KorisnickoImeKorisnika == korisnickoIme);
         }
 
         public Korisnik CreateKorisnik(KorisnikCreationDto korisnik)
@@ -41,11 +43,12 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
             Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
             korisnikEntity.Id_korisnik = Guid.NewGuid();
             /* lozinka 
-            var lozinkaKorisnikaHashed = HashPassword(administrator.LozinkaKorisnika);
+            var lozinkaKorisnikaHashed = HashPassword(korisnik.LozinkaKorisnika);
             korisnikEntity.lozinkaKorisnikaHashed = Convert.FromBase64String(lozinkaKorisnikaHashed.Item1);
             korisnikEntity.saltKorisnikaa = Convert.FromBase64String(lozinkaKorisnikaHashed.Item2);
             */
             var createdKorisnik = this.context.Korisnik.Add(korisnikEntity);
+            //this.context.SaveChanges();
             return mapper.Map<Korisnik>(createdKorisnik.Entity);
         }
 
@@ -61,6 +64,47 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         {
             var deletedKorisnik = GetKorisnikById(Id_korisnik);
             this.context.Remove(deletedKorisnik);
+        }
+
+        public bool KorisnikWithCredentialsExists(string korisnickoIme, string lozinka)
+        {
+            Korisnik korisnik = context.Korisnik.FirstOrDefault(k => k.KorisnickoImeKorisnika== korisnickoIme);
+
+            if (korisnik == null)
+            {
+                return false;
+            }
+            if (VerifyPassword(lozinka, Convert.ToBase64String(korisnik.LozinkaKorisnikaHashed), korisnik.saltKorisnika))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // helpers
+        public bool VerifyPassword(string lozinka, string lozinkaHashed, byte[] salt)
+        {
+            var saltBytes = salt;
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(lozinka, saltBytes, iterations);
+            if (Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == lozinkaHashed)
+            {
+                return true;
+            }
+            return false;
+        }
+        private Tuple<string, string> HashPassword(string lozinka)
+        {
+            var sBytes = new byte[lozinka.Length];
+            new RNGCryptoServiceProvider().GetNonZeroBytes(sBytes);
+            var salt = Convert.ToBase64String(sBytes);
+
+            var derivedBytes = new Rfc2898DeriveBytes(lozinka, sBytes, iterations);
+
+            return new Tuple<string, string>
+            (
+                Convert.ToBase64String(derivedBytes.GetBytes(256)),
+                salt
+            );
         }
     }
 }
