@@ -27,10 +27,8 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
 
         public Porudzbina GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontigentKarata)
         {
-            return context.Porudzbina.FirstOrDefault(e => (e.Id_korisnik == Id_korisnik && e.Id_kontigentKarata == Id_kontigentKarata));
+            return this.context.Porudzbina.FirstOrDefault(e => e.Id_korisnik == Id_korisnik && e.Id_kontigentKarata == Id_kontigentKarata);
         }
-
-
 
         public Porudzbina CreatePorudzbina(Porudzbina porudzbina)
         {
@@ -39,12 +37,38 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             return mapper.Map<Porudzbina>(createdPorudzbina.Entity);
         }
 
-        public void UpdatePorudzbina(Porudzbina porudzbina)
+        public Porudzbina UpdatePorudzbina(Porudzbina porudzbina)
         {
-            /*
-               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze
-               i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-            */
+            try
+            {
+                var existingPorudzbina = this.context.Porudzbina.FirstOrDefault(e => (e.Id_korisnik == porudzbina.Id_korisnik && e.Id_kontigentKarata == porudzbina.Id_kontigentKarata));
+
+                if (existingPorudzbina != null)
+                {
+                    existingPorudzbina.DatumPorudzbine = porudzbina.DatumPorudzbine;
+                    existingPorudzbina.VremePorudzbine = porudzbina.VremePorudzbine;
+                    existingPorudzbina.BrojKarata = porudzbina.BrojKarata;
+                    existingPorudzbina.UkupnaCena = porudzbina.UkupnaCena;
+                    existingPorudzbina.StatusPorudzbine = porudzbina.StatusPorudzbine;
+                    existingPorudzbina.PotvrdaPlacanja = porudzbina.PotvrdaPlacanja;
+                    existingPorudzbina.MetodaIsporuke = porudzbina.MetodaIsporuke;
+                    existingPorudzbina.AdresaIsporuke = porudzbina.AdresaIsporuke;
+                    existingPorudzbina.DodatneNapomene = porudzbina.DodatneNapomene;
+                    existingPorudzbina.Id_korisnik = porudzbina.Id_korisnik;
+                    existingPorudzbina.Id_kontigentKarata = porudzbina.Id_kontigentKarata;
+                    this.context.SaveChanges();
+
+                    return existingPorudzbina;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Porudzbina with IDs {porudzbina.Id_korisnik} and {porudzbina.Id_kontigentKarata} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating Porudzbina.", ex);
+            }
         }
 
         public void DeletePorudzbina(Guid Id_korisnik, Guid Id_kontigentKarata)

@@ -61,17 +61,17 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<AdministratorDto>(administrator));
+            return mapper.Map<AdministratorDto>(administrator);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         [HttpGet("{KorisnickoImeAdministratora}")]
-        public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string korisnickoIme)
+        public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string KorisnickoImeAdministratora)
         {
            
-            var administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoIme);
+            var administrator = administratorRepository.GetAdministratorByKorisnickoIme(KorisnickoImeAdministratora);
 
             if (administrator == null)
             {

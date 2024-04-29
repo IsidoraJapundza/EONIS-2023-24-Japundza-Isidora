@@ -14,7 +14,7 @@ namespace EONIS_IT34_2020.Models.Entities
         public byte[] LozinkaAdministratoraHashed { get; set; } 
         public byte[] saltAdministratora { get; set; }
         public String KontaktAdministratora { get; set; }
-        public Boolean StatusAktivnosti { get; set; }
+        public String StatusAktivnosti { get; set; }
         public String Privilegije { get; set; }
     }
 }

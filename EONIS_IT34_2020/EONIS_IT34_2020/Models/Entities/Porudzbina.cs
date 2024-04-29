@@ -11,12 +11,12 @@ namespace EONIS_IT34_2020.Models.Entities
         public DateOnly DatumPorudzbine { get; set; }
         public TimeOnly VremePorudzbine { get; set; }
         public int BrojKarata { get; set; }
-        public double UkupnaCena { get; set; }
-        public String StatusPorudzbine { get; set; }
-        public Boolean PotvrdaPlacanja { get; set; }
-        public String MetodaIsporuke { get; set; }
-        public String AdresaIsporuke { get; set; }
-        public String DodatneNapomene { get; set; }
+        public int UkupnaCena { get; set; } //ispraviti
+        public String StatusPorudzbine { get; set; } // 'U toku', 'Završena', 'Otkazana'
+        public String? PotvrdaPlacanja { get; set; } // 'Za naplatu', 'Plaćeno'
+        public String? MetodaIsporuke { get; set; }
+        public String? AdresaIsporuke { get; set; }
+        public String? DodatneNapomene { get; set; }
         public Guid Id_korisnik { get; set; }
         public Guid Id_kontigentKarata { get; set; }
 

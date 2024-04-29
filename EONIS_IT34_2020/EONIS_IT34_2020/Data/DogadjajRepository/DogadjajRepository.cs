@@ -27,7 +27,7 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
 
         public Dogadjaj GetDogadjajById(Guid Id_dogadjaj)
         {
-            return context.Dogadjaj.FirstOrDefault(e => e.Id_dogadjaj == Id_dogadjaj);
+            return this.context.Dogadjaj.FirstOrDefault(e => e.Id_dogadjaj == Id_dogadjaj);
         }
 
         public Dogadjaj CreateDogadjaj(Dogadjaj dogadjaj)

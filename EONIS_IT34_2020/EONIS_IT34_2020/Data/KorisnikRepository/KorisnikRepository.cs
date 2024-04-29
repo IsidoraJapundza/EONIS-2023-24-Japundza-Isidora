@@ -42,28 +42,59 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         {
             Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
             korisnikEntity.Id_korisnik = Guid.NewGuid();
-            /* lozinka 
+            // lozinka 
             var lozinkaKorisnikaHashed = HashPassword(korisnik.LozinkaKorisnika);
-            korisnikEntity.lozinkaKorisnikaHashed = Convert.FromBase64String(lozinkaKorisnikaHashed.Item1);
-            korisnikEntity.saltKorisnikaa = Convert.FromBase64String(lozinkaKorisnikaHashed.Item2);
-            */
+            korisnikEntity.LozinkaKorisnikaHashed = Convert.FromBase64String(lozinkaKorisnikaHashed.Item1);
+            //korisnikEntity.saltKorisnika = Convert.FromBase64String(lozinkaKorisnikaHashed.Item2);
+
             var createdKorisnik = this.context.Korisnik.Add(korisnikEntity);
-            //this.context.SaveChanges();
+            this.context.SaveChanges();
             return mapper.Map<Korisnik>(createdKorisnik.Entity);
         }
 
-        public void UpdateKorisnik(Korisnik korisnik)
+        public Korisnik UpdateKorisnik(KorisnikUpdateDto korisnik)
         {
-            /*
-               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze
-               i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-            */
+            try
+            {
+                var existingKorisnik = this.context.Korisnik.FirstOrDefault(e => e.Id_korisnik == korisnik.Id_korisnik);
+
+                if (existingKorisnik != null)
+                {
+                    existingKorisnik.ImeKorisnika = korisnik.ImeKorisnika;
+                    existingKorisnik.PrezimeKorisnika = korisnik.PrezimeKorisnika;
+                    existingKorisnik.KorisnickoImeKorisnika = korisnik.KorisnickoImeKorisnika;
+                    existingKorisnik.MejlKorisnika = korisnik.MejlKorisnika;
+                    existingKorisnik.KontaktKorisnika = korisnik.KontaktKorisnika;
+                    existingKorisnik.AdresaKorisnika = korisnik.AdresaKorisnika;
+                    existingKorisnik.PrebivalisteKorisnika = korisnik.PrebivalisteKorisnika;
+                    existingKorisnik.PostanskiBroj = korisnik.PostanskiBroj;
+                    existingKorisnik.DatumRodjenjaKorisnika = korisnik.DatumRodjenjaKorisnika; //DateOnly.Parse(korisnik.DatumRodjenjaKorisnika);
+                    existingKorisnik.DatumRegistracijeKorisnika = korisnik.DatumRegistracijeKorisnika; //DateOnly.Parse(korisnik.DatumRegistracijeKorisnika);
+
+                    var novaLozinkaHashed = HashPassword(korisnik.LozinkaKorisnika);
+                    existingKorisnik.LozinkaKorisnikaHashed = Convert.FromBase64String(novaLozinkaHashed.Item1);
+                    //existingKorisnik.saltKorisnika = Convert.FromBase64String(novaLozinkaHashed.Item2);
+
+                    this.context.SaveChanges();
+
+                    return existingKorisnik;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Korisnik with ID {korisnik.Id_korisnik} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating Korisnik.", ex);
+            }
         }
 
         public void DeleteKorisnik(Guid Id_korisnik)
         {
             var deletedKorisnik = GetKorisnikById(Id_korisnik);
             this.context.Remove(deletedKorisnik);
+            this.context.SaveChanges();
         }
 
         public bool KorisnikWithCredentialsExists(string korisnickoIme, string lozinka)

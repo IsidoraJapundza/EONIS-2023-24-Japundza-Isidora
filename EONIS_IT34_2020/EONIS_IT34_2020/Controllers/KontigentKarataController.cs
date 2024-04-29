@@ -17,10 +17,10 @@ namespace EONIS_IT34_2020.Controllers
         private readonly IKontigentKarataRepository kontigentKarataRepository;
         private readonly IMapper mapper;
 
-        public KontigentKarataController(IMapper mapper, IKontigentKarataRepository kontigentKarataRepository)
+        public KontigentKarataController(IKontigentKarataRepository kontigentKarataRepository, IMapper mapper)
         {
-            this.mapper = mapper;
             this.kontigentKarataRepository = kontigentKarataRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -48,7 +48,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         [HttpGet("{Id_kontigentKarata}")]
-        public ActionResult<KontigentKarata> GetKontigentKarataById(Guid Id_kontigentKarata)
+        public ActionResult<KontigentKarataDto> GetKontigentKarataById(Guid Id_kontigentKarata)
         {
             var kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
 
@@ -56,7 +56,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<KontigentKarata>(kontigentKarata));
+            return Ok(mapper.Map<KontigentKarataDto>(kontigentKarata));
         }
 
 
@@ -65,6 +65,8 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<KontigentKarataDto> CreateKontigentKarata([FromBody] KontigentKarataCreationDto kontigentKarataCreationDto)
         {
             if(kontigentKarataCreationDto == null)
@@ -74,6 +76,17 @@ namespace EONIS_IT34_2020.Controllers
 
             try
             {
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+               {
+                   return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+               }
+               var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+               if (roleClaim == null)
+               {
+                   return Forbid();
+               }*/
+
                 KontigentKarata kontigentKarataEntity = mapper.Map<KontigentKarata>(kontigentKarataCreationDto);
                 kontigentKarataEntity.Id_kontigentKarata = Guid.NewGuid();
                 KontigentKarata confirmation = kontigentKarataRepository.CreateKontigentKarata(kontigentKarataEntity);
@@ -93,11 +106,31 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<KontigentKarataDto> UpdateKontigentKarata(KontigentKarataUpdateDto kontigentKarataUpdateDto) // proveriti
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<KontigentKarataDto> UpdateKontigentKarata(KontigentKarataUpdateDto kontigentKarataUpdateDto) 
         {
             try
             {
-                var kontigentKarataEntity = kontigentKarataRepository.GetKontigentKarataById(kontigentKarataUpdateDto.Id_kontigentKarata);
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+
+                KontigentKarata kontigentKarata = mapper.Map<KontigentKarata>(kontigentKarataUpdateDto);
+
+                var kontigentKarataEntity = kontigentKarataRepository.UpdateKontigentKarata(kontigentKarata);
+
+                KontigentKarataDto kontigentKarataDto = mapper.Map<KontigentKarataDto>(kontigentKarataEntity);
+                return Ok(kontigentKarataDto);
+
+                /*var kontigentKarataEntity = kontigentKarataRepository.GetKontigentKarataById(kontigentKarataUpdateDto.Id_kontigentKarata);
 
                 if (kontigentKarataEntity == null)
                 {
@@ -105,7 +138,11 @@ namespace EONIS_IT34_2020.Controllers
                 }
 
                 kontigentKarataRepository.UpdateKontigentKarata(mapper.Map<KontigentKarata>(kontigentKarataUpdateDto));
-                return Ok(mapper.Map<KontigentKarataDto>(kontigentKarataUpdateDto));
+                return Ok(mapper.Map<KontigentKarataDto>(kontigentKarataUpdateDto));*/
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -116,13 +153,26 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
         [HttpDelete("{Id_kontigentKarata}")]
         public IActionResult DeleteKontigentKarata(Guid Id_kontigentKarata)
         {
             try
             {
-                KontigentKarata kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+
+                var kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
                 if (kontigentKarata == null)
                 {
                     return NotFound();

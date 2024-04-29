@@ -9,7 +9,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         Korisnik GetKorisnikById(Guid Id_korisnik);
         Korisnik GetKorisnikByKorisnickoIme(String korisnickoIme);
         Korisnik CreateKorisnik(KorisnikCreationDto korisnik);
-        void UpdateKorisnik(Korisnik korisnik); // izmeniti
+        Korisnik UpdateKorisnik(KorisnikUpdateDto korisnik);
         void DeleteKorisnik(Guid Id_korisnik);
         bool SaveChanges();
         bool KorisnikWithCredentialsExists(string korisnickoIme, string lozinka);

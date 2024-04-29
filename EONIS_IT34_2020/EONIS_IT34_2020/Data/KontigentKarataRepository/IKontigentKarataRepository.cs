@@ -8,7 +8,8 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
         List<KontigentKarata> GetKontigentKarata();
         KontigentKarata GetKontigentKarataById(Guid Id_kontigentKarata);
         KontigentKarata CreateKontigentKarata(KontigentKarata kontigentKarata);
-        void UpdateKontigentKarata(KontigentKarata kontigentKarata); // izmeniti
+        //void UpdateKontigentKarata(KontigentKarata kontigentKarata); // izmeniti
+        KontigentKarata UpdateKontigentKarata(KontigentKarata kontigentKarata);
         void DeleteKontigentKarata(Guid Id_kontigentKarata);
         bool SaveChanges();
     }

@@ -26,6 +26,23 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
             return this.context.KontigentKarata.ToList();
         }
 
+        /*public List<KontigentKarata> GetKontigentKarata()
+        {
+            var kontigentKarataList = this.context.KontigentKarata.ToList();
+
+            // Check for null values before accessing properties
+            foreach (var kontigentKarata in kontigentKarataList)
+            {
+                // Handle nullable properties as needed
+                if (kontigentKarata.Napomena == null)
+                {
+                    kontigentKarata.Napomena = ""; // Provide a default value or handle null case
+                }
+            }
+
+            return kontigentKarataList;
+        }*/
+
         public KontigentKarata GetKontigentKarataById(Guid Id_kontigentKarata)
         {
             return this.context.KontigentKarata.FirstOrDefault(e => e.Id_kontigentKarata == Id_kontigentKarata);
@@ -38,12 +55,36 @@ namespace EONIS_IT34_2020.Data.KontigentKarataRepository
             return mapper.Map<KontigentKarata>(createdKontigentKarata.Entity);
         }
 
-        public void UpdateKontigentKarata(KontigentKarata kontigentKarata)
+
+        public KontigentKarata UpdateKontigentKarata(KontigentKarata kontigentKarata)
         {
-            /*
-               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze
-               i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-            */
+            try
+            {
+                var existingKontigentKarata = this.context.KontigentKarata.FirstOrDefault(e => e.Id_kontigentKarata == kontigentKarata.Id_kontigentKarata);
+
+                if (existingKontigentKarata != null)
+                {
+                    existingKontigentKarata.NazivKarte = kontigentKarata.NazivKarte;
+                    existingKontigentKarata.Sektor = kontigentKarata.Sektor;
+                    existingKontigentKarata.Ulaz = kontigentKarata.Ulaz;
+                    existingKontigentKarata.Cena = kontigentKarata.Cena;
+                    existingKontigentKarata.Kolicina = kontigentKarata.Kolicina;
+                    existingKontigentKarata.Napomena = kontigentKarata.Napomena;
+                    existingKontigentKarata.Id_administrator = kontigentKarata.Id_administrator;
+                    existingKontigentKarata.Id_dogadjaj = kontigentKarata.Id_dogadjaj;
+                    this.context.SaveChanges();
+
+                    return existingKontigentKarata;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"KontigentKarata with ID {kontigentKarata.Id_kontigentKarata} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating KontigentKarata.", ex);
+            }
         }
 
         public void DeleteKontigentKarata(Guid Id_kontigentKarata)

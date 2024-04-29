@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EONIS_IT34_2020.Models.Entities
 {
-    [Table("KontigentKarata")]
+    //[Table("KontigentKarata")]
     public class KontigentKarata
     {
         [Key]

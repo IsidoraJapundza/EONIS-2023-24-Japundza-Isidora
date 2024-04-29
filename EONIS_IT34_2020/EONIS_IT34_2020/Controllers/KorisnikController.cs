@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using EONIS_IT34_2020.Data.DogadjajRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
+using EONIS_IT34_2020.Models.DTOs.Dogadjaj;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +33,18 @@ namespace EONIS_IT34_2020.Controllers
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<List<KorisnikDto>> GetKorisnik()
         {
+            /*
+              if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+            */
             var korisnici = korisnikRepository.GetKorisnik();
 
             if (korisnici == null || korisnici.Count == 0)
@@ -54,6 +68,18 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator, Korisnik")]
         public ActionResult<KorisnikDto> GetKorisnikById(Guid Id_korisnik)
         {
+            /*
+             if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+             */
             var korisnik = korisnikRepository.GetKorisnikById(Id_korisnik);
             
             if (korisnik == null)
@@ -85,7 +111,7 @@ namespace EONIS_IT34_2020.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<KorisnikDto> CreateKorisnik([FromBody] KorisnikCreationDto korisnikCreationDto) // izmeniti
+        public ActionResult<KorisnikDto> CreateKorisnik([FromBody] KorisnikCreationDto korisnikCreationDto) 
         {
             if (korisnikCreationDto == null)
             {
@@ -97,24 +123,9 @@ namespace EONIS_IT34_2020.Controllers
                 Korisnik createdKorisnik = korisnikRepository.CreateKorisnik(korisnikCreationDto);
                 return mapper.Map<KorisnikDto>(createdKorisnik);
 
-                
-                /*var korisnik = mapper.Map<Korisnik>(korisnikCreationDto);
-                korisnikRepository.CreateKorisnik(korisnik);
-                korisnikRepository.SaveChanges();
-
-                var korisnikDto = mapper.Map<KorisnikDto>(korisnik);
-
-                return Ok(korisnikDto);*/
-
-                //--
-
-                /*
-                Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnikCreationDto);
+                /*Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnikCreationDto);
                 korisnikEntity.Id_korisnik = Guid.NewGuid();
-                KorisnikDto confirmation = korisnikRepository.CreateKorisnik(korisnikEntity); // izmeniti
-
-                Console.WriteLine(mapper.Map<KorisnikDto>(confirmation));
-
+                Korisnik confirmation = korisnikRepository.CreateKorisnik(korisnikEntity);
                 return Ok(mapper.Map<KorisnikDto>(confirmation));*/
             }
             catch (Exception ex)
@@ -124,39 +135,38 @@ namespace EONIS_IT34_2020.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator, Korisnik")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<KorisnikDto> UpdateKorisnik(KorisnikUpdateDto korisnik)  // (Administrator administrator)
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<KorisnikDto> UpdateKorisnik(KorisnikUpdateDto korisnikUpdateDto)  
         {
             try
             {
-                var oldKorisnik = korisnikRepository.GetKorisnikById(korisnik.Id_korisnik);
-                if (oldKorisnik == null)
+                /*
+                  if (!HttpContext.User.Identity.IsAuthenticated)
                 {
-                    return NotFound();
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
-                Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
-                mapper.Map(korisnikEntity, oldKorisnik);
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
 
-                oldKorisnik.ImeKorisnika = korisnik.ImeKorisnika;
-                // dopuniti ostalo
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                } 
+                 */
 
+                var updatedKorisnik = korisnikRepository.UpdateKorisnik(korisnikUpdateDto);
 
-                /*if (!string.IsNullOrEmpty(korisnik.Lozinka))
-               {
-                   korisnik.Lozinka = BCrypt.Net.BCrypt.HashPassword(korisnik.Lozinka);
-               }*/
+                KorisnikDto updatedKorisnikDto = mapper.Map<KorisnikDto>(updatedKorisnik);
 
-                korisnikRepository.SaveChanges();
-
-                return Ok(mapper.Map<KorisnikDto>(korisnik));
+                return Ok(updatedKorisnikDto);
 
                 /*
                  Korisnik UpdateKorisnik(KorisnikUpdateDto korisnik);
-
 
                 var updatedKorisnik = korisnikRepository.UpdateKorisnik(korisnik);
                 KorisnikDto updatedKorisnikDto = mapper.Map<KorisnikDto>(updatedKorisnik);
@@ -178,7 +188,18 @@ namespace EONIS_IT34_2020.Controllers
         {
             try
             {
-                Korisnik korisnik = korisnikRepository.GetKorisnikById(Id_korisnik);
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+
+                var korisnik = korisnikRepository.GetKorisnikById(Id_korisnik);
                 if (korisnik == null)
                 {
                     return NotFound();

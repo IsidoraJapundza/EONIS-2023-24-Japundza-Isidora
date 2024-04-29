@@ -17,10 +17,10 @@ namespace EONIS_IT34_2020.Controllers
         private readonly IDogadjajRepository dogadjajRepository;
         private readonly IMapper mapper;
 
-        public DogadjajController(IMapper mapper, IDogadjajRepository dogadjajRepository)
+        public DogadjajController(IDogadjajRepository dogadjajRepository, IMapper mapper)
         {
-            this.mapper = mapper;
             this.dogadjajRepository = dogadjajRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -29,6 +29,12 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult<List<DogadjajDto>> GetDogadjaj()
         {
+            /*
+             if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+             */
             var dogadjaji = dogadjajRepository.GetDogadjaj();
 
             if (dogadjaji == null || dogadjaji.Count == 0)
@@ -56,7 +62,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<Dogadjaj>(dogadjaj));
+            return Ok(mapper.Map<DogadjajDto>(dogadjaj));
         }
 
 
@@ -65,7 +71,9 @@ namespace EONIS_IT34_2020.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<DogadjajDto> CreateDogadjaj([FromBody] DogadjajCreationDto dogadjajCreationDto) //izmeniti!
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ActionResult<DogadjajDto> CreateDogadjaj([FromBody] DogadjajCreationDto dogadjajCreationDto) 
         {
             if (dogadjajCreationDto == null)
             {
@@ -73,21 +81,18 @@ namespace EONIS_IT34_2020.Controllers
             }
 
             try
-            {
-                /*Dogadjaj createdDogadjaj = dogadjajRepository.CreateDogadjaj(dogadjajCreationDto);
-                return mapper.Map<DogadjajDto>(createdDogadjaj);*/
+            {               
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
 
-                /*var dogadjaj = mapper.Map<Dogadjaj>(dogadjajCreationDto);
-                dogadjajRepository.CreateDogadjaj(dogadjaj);
-                dogadjajRepository.SaveChanges();
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
 
-                var dogadjajDto = mapper.Map<DogadjajDto>(dogadjaj);
-
-                return Ok(administratorDto);*/
-
-                //--
-
-                
                 Dogadjaj dogadjajEntity = mapper.Map<Dogadjaj>(dogadjajCreationDto);
                 dogadjajEntity.Id_dogadjaj = Guid.NewGuid();
                 Dogadjaj confirmation = dogadjajRepository.CreateDogadjaj(dogadjajEntity);
@@ -106,11 +111,31 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<DogadjajDto> UpdateDogadjaj(DogadjajUpdateDto dogadjajUpdateDto) // proveriti metodu
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<DogadjajDto> UpdateDogadjaj(DogadjajUpdateDto dogadjajUpdateDto) 
         {
             try
             {
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+
                 Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
+
+                var dogadjajEntity = dogadjajRepository.UpdateDogadjaj(dogadjaj);
+
+                DogadjajDto dogadjajDto = mapper.Map<DogadjajDto>(dogadjajEntity);
+                return Ok(dogadjajDto);
+
+                /*Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
 
                 var dogadjajEntity = dogadjajRepository.GetDogadjajById(dogadjajUpdateDto.Id_dogadjaj);
 
@@ -120,7 +145,11 @@ namespace EONIS_IT34_2020.Controllers
                 }
 
                 dogadjajRepository.UpdateDogadjaj(mapper.Map<Dogadjaj>(dogadjajUpdateDto));
-                return Ok(mapper.Map<DogadjajDto>(dogadjajUpdateDto));
+                return Ok(mapper.Map<DogadjajDto>(dogadjajUpdateDto));*/
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -132,13 +161,26 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
         [HttpDelete("{Id_dogadjaj}")]
         public IActionResult DeleteDogadjaj(Guid Id_dogadjaj)
         {
             try
             {
-                Dogadjaj dogadjaj = dogadjajRepository.GetDogadjajById(Id_dogadjaj);
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+
+                var dogadjaj = dogadjajRepository.GetDogadjajById(Id_dogadjaj);
                 if (dogadjaj == null)
                 {
                     return NotFound();
