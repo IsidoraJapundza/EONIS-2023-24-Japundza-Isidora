@@ -29,7 +29,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<KorisnikDto>> GetKorisnik()
+        public ActionResult<List<KorisnikDto>> GetKorisnik(int page = 1, int pageSize = 1)
         {
             /*
               if (!HttpContext.User.Identity.IsAuthenticated)
@@ -55,7 +55,18 @@ namespace EONIS_IT34_2020.Controllers
             {
                 korisniciDto.Add(mapper.Map<KorisnikDto>(korisnik));
             }
-            return Ok(korisniciDto);
+
+            var totalCount = korisniciDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = korisniciDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+
+            //return Ok(korisniciDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]

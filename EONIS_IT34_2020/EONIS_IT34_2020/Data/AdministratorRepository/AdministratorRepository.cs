@@ -33,10 +33,10 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
             return context.Administrator.FirstOrDefault(e => e.Id_administrator == Id_administrator);
         }
 
-        public Administrator GetAdministratorByKorisnickoIme(string korisnickoIme)
+        /*public Administrator GetAdministratorByKorisnickoIme(string korisnickoIme)
         {
             return context.Administrator.FirstOrDefault(e => e.KorisnickoImeAdministratora == korisnickoIme);
-        }
+        }*/
 
         public Administrator CreateAdministrator(AdministratorCreationDto administrator)
         {

@@ -27,7 +27,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<PorudzbinaDto>> GetPorudzbina()
+        public ActionResult<List<PorudzbinaDto>> GetPorudzbina(int page = 1, int pageSize = 10)
         {
             /*
             if (!HttpContext.User.Identity.IsAuthenticated)
@@ -53,7 +53,18 @@ namespace EONIS_IT34_2020.Controllers
             {
                 porudzbineDto.Add(mapper.Map<PorudzbinaDto>(porudzbina));
             }
-            return Ok(porudzbineDto);
+
+            var totalCount = porudzbineDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = porudzbineDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+
+            //return Ok(porudzbineDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]

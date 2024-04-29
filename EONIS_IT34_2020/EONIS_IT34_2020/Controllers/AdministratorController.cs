@@ -30,7 +30,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<AdministratorDto>> GetAdministrator()
+        public ActionResult<List<AdministratorDto>> GetAdministrator(int page = 1, int pageSize = 10)
         {
             var administratori = administratorRepository.GetAdministrator();
 
@@ -44,7 +44,17 @@ namespace EONIS_IT34_2020.Controllers
             {
                 administratoriDto.Add(mapper.Map<AdministratorDto>(administrator));
             }
-            return Ok(administratoriDto);
+
+            var totalCount = administratoriDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = administratoriDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+            //return Ok(administratoriDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -64,7 +74,7 @@ namespace EONIS_IT34_2020.Controllers
             return mapper.Map<AdministratorDto>(administrator);
         }
 
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        /*[ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         [HttpGet("{KorisnickoImeAdministratora}")]
@@ -79,7 +89,7 @@ namespace EONIS_IT34_2020.Controllers
             }
 
             return mapper.Map<AdministratorDto>(administrator);
-        }
+        }*/
 
 
         [HttpPost]

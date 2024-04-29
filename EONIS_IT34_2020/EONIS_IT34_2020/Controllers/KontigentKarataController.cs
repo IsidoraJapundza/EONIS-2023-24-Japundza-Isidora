@@ -27,7 +27,7 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<KontigentKarataDto>> GetKontigentKarata()
+        public ActionResult<List<KontigentKarataDto>> GetKontigentKarata(int page = 1, int pageSize = 10)
         {
             var kontigentiKarata = kontigentKarataRepository.GetKontigentKarata();
 
@@ -41,6 +41,17 @@ namespace EONIS_IT34_2020.Controllers
             {
                 kontigentiKarataDto.Add(mapper.Map<KontigentKarataDto>(kontigentKarata));
             }
+
+            var totalCount = kontigentiKarataDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = kontigentiKarataDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+
             return Ok(kontigentiKarataDto);
         }
 

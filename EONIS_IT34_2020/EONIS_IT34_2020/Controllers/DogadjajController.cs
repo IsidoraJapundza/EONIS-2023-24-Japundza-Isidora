@@ -27,14 +27,15 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<DogadjajDto>> GetDogadjaj()
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<List<DogadjajDto>> GetDogadjaj(int page = 1, int pageSize = 10)
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
+            
+            /*if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
-            }
-             */
+            }*/
+             
             var dogadjaji = dogadjajRepository.GetDogadjaj();
 
             if (dogadjaji == null || dogadjaji.Count == 0)
@@ -47,7 +48,18 @@ namespace EONIS_IT34_2020.Controllers
             {
                 dogadjajiDto.Add(mapper.Map<DogadjajDto>(dogadjaj));
             }
-            return Ok(dogadjajiDto);
+
+            var totalCount = dogadjajiDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = dogadjajiDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+
+            //return Ok(dogadjajiDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
