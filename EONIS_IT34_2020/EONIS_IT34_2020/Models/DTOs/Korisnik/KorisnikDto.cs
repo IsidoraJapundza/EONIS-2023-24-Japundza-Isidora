@@ -2,6 +2,7 @@
 {
     public class KorisnikDto
     {
+        public Guid Id_korisnik { get; set; }
         public String ImeKorisnika { get; set; }
         public String PrezimeKorisnika { get; set; }
         public String KorisnickoImeKorisnika { get; set; }

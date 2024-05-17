@@ -40,9 +40,7 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
         /*public void UpdateDogadjaj(Dogadjaj dogadjaj)
         {
             /*
-               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze
-               i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-            
+               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
         }*/
 
         public Dogadjaj UpdateDogadjaj(Dogadjaj dogadjaj)

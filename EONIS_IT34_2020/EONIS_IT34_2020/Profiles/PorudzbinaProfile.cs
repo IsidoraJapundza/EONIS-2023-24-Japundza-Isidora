@@ -6,8 +6,8 @@ namespace EONIS_IT34_2020.Profiles
 {
     public class PorudzbinaProfile : Profile
     {
-        public PorudzbinaProfile() {
-
+        public PorudzbinaProfile() 
+        {
             CreateMap<Porudzbina, PorudzbinaDto>().ReverseMap();
             CreateMap<Porudzbina, PorudzbinaCreationDto>().ReverseMap();
             CreateMap<Porudzbina, PorudzbinaUpdateDto>().ReverseMap();

@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EONIS_IT34_2020.Models.Entities
+﻿namespace EONIS_IT34_2020.Models.DTOs.KontingentKarata
 {
-    //[Table("KontigentKarata")]
-    public class KontigentKarata
+    public class KontingentKarataUpdateDto
     {
-        [Key]
-        public Guid Id_kontigentKarata { get; set; }
+        public Guid Id_kontingentKarata { get; set; }
         public String NazivKarte { get; set; }
         public String Sektor { get; set; }
         public String Ulaz { get; set; }
@@ -16,6 +11,5 @@ namespace EONIS_IT34_2020.Models.Entities
         public String Napomena { get; set; }
         public Guid Id_administrator { get; set; }
         public Guid Id_dogadjaj { get; set; }
-
     }
 }

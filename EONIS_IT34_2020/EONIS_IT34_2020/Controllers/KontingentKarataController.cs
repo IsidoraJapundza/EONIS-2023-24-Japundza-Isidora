@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.KontigentKarataRepository;
-using EONIS_IT34_2020.Models.DTOs.KontigentKarata;
+using EONIS_IT34_2020.Data.KontingentKarataRepository;
+using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -11,15 +11,15 @@ using System.Security.Claims;
 namespace EONIS_IT34_2020.Controllers
 {
     [ApiController]
-    [Route("api/kontigentKarata")]
-    public class KontigentKarataController : Controller
+    [Route("api/kontingentKarata")]
+    public class KontingentKarataController : Controller
     {
-        private readonly IKontigentKarataRepository kontigentKarataRepository;
+        private readonly IKontingentKarataRepository kontingentKarataRepository;
         private readonly IMapper mapper;
 
-        public KontigentKarataController(IKontigentKarataRepository kontigentKarataRepository, IMapper mapper)
+        public KontingentKarataController(IKontingentKarataRepository kontingentKarataRepository, IMapper mapper)
         {
-            this.kontigentKarataRepository = kontigentKarataRepository;
+            this.kontingentKarataRepository = kontingentKarataRepository;
             this.mapper = mapper;
         }
 
@@ -27,47 +27,45 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<KontigentKarataDto>> GetKontigentKarata(int page = 1, int pageSize = 10)
+        public ActionResult<List<KontingentKarataDto>> GetKontingentKarata(int page = 1, int pageSize = 10)
         {
-            var kontigentiKarata = kontigentKarataRepository.GetKontigentKarata();
+            var kontingentiKarata = kontingentKarataRepository.GetKontingentKarata();
 
-            if (kontigentiKarata == null || kontigentiKarata.Count == 0)
+            if (kontingentiKarata == null || kontingentiKarata.Count == 0) 
             {
                 NoContent();
             }
 
-            List<KontigentKarataDto> kontigentiKarataDto = new List<KontigentKarataDto>();
-            foreach (var kontigentKarata in kontigentiKarata)
+            List<KontingentKarataDto> kontingentiKarataDto = new List<KontingentKarataDto>();
+            foreach (var kontingentKarata in kontingentiKarata)
             {
-                kontigentiKarataDto.Add(mapper.Map<KontigentKarataDto>(kontigentKarata));
+                kontingentiKarataDto.Add(mapper.Map<KontingentKarataDto>(kontingentKarata));
             }
 
-            var totalCount = kontigentiKarataDto.Count;
+            var totalCount = kontingentiKarataDto.Count;
             var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
             if (totalPages < page || page <= 0)
             {
                 return NoContent();
             }
-            var itemsPerPage = kontigentiKarataDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var itemsPerPage = kontingentiKarataDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return Ok(itemsPerPage);
-
-            return Ok(kontigentiKarataDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        [HttpGet("{Id_kontigentKarata}")]
-        public ActionResult<KontigentKarataDto> GetKontigentKarataById(Guid Id_kontigentKarata)
+        [HttpGet("{Id_kontingentKarata}")]
+        public ActionResult<KontingentKarataDto> GetKontingentKarataById(Guid Id_kontingentKarata)
         {
-            var kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
+            var kontingentKarata = kontingentKarataRepository.GetKontingentKarataById(Id_kontingentKarata);
 
-            if (kontigentKarata == null)
+            if (kontingentKarata == null)
             {
-                return NotFound();
+                return NotFound("KontingentKarata with the specified ID not found.");
             }
-            return Ok(mapper.Map<KontigentKarataDto>(kontigentKarata));
+            return Ok(mapper.Map<KontingentKarataDto>(kontingentKarata));
         }
 
 
@@ -78,9 +76,9 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<KontigentKarataDto> CreateKontigentKarata([FromBody] KontigentKarataCreationDto kontigentKarataCreationDto)
+        public ActionResult<KontingentKarataDto> CreateKontingentKarata([FromBody] KontingentKarataCreationDto kontingentKarataCreationDto)
         {
-            if(kontigentKarataCreationDto == null)
+            if(kontingentKarataCreationDto == null)
             {
                 return BadRequest("Invalid data provided!");
             }
@@ -95,14 +93,14 @@ namespace EONIS_IT34_2020.Controllers
 
                if (roleClaim == null)
                {
-                   return Forbid();
+                   return Forbid(); //"You don't have permission to create kontingentKarata."
                }*/
 
-                KontigentKarata kontigentKarataEntity = mapper.Map<KontigentKarata>(kontigentKarataCreationDto);
-                kontigentKarataEntity.Id_kontigentKarata = Guid.NewGuid();
-                KontigentKarata confirmation = kontigentKarataRepository.CreateKontigentKarata(kontigentKarataEntity);
+                KontingentKarata kontingentKarataEntity = mapper.Map<KontingentKarata>(kontingentKarataCreationDto);
+                kontingentKarataEntity.Id_kontingentKarata = Guid.NewGuid();
+                KontingentKarata confirmation = kontingentKarataRepository.CreateKontingentKarata(kontingentKarataEntity);
 
-                return Ok(mapper.Map<KontigentKarataDto>(confirmation));
+                return Ok(mapper.Map<KontingentKarataDto>(confirmation));
             }
             catch (Exception ex)
             {
@@ -119,7 +117,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<KontigentKarataDto> UpdateKontigentKarata(KontigentKarataUpdateDto kontigentKarataUpdateDto) 
+        public ActionResult<KontingentKarataDto> UpdateKontingentKarata(KontingentKarataUpdateDto kontingentKarataUpdateDto) 
         {
             try
             {
@@ -131,29 +129,19 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); //"You don't have permission to update kontingentKarata."
                 }*/
 
-                KontigentKarata kontigentKarata = mapper.Map<KontigentKarata>(kontigentKarataUpdateDto);
+                KontingentKarata kontingentKarata = mapper.Map<KontingentKarata>(kontingentKarataUpdateDto);
 
-                var kontigentKarataEntity = kontigentKarataRepository.UpdateKontigentKarata(kontigentKarata);
+                var kontingentKarataEntity = kontingentKarataRepository.UpdateKontingentKarata(kontingentKarata);
 
-                KontigentKarataDto kontigentKarataDto = mapper.Map<KontigentKarataDto>(kontigentKarataEntity);
-                return Ok(kontigentKarataDto);
-
-                /*var kontigentKarataEntity = kontigentKarataRepository.GetKontigentKarataById(kontigentKarataUpdateDto.Id_kontigentKarata);
-
-                if (kontigentKarataEntity == null)
-                {
-                    return NotFound();
-                }
-
-                kontigentKarataRepository.UpdateKontigentKarata(mapper.Map<KontigentKarata>(kontigentKarataUpdateDto));
-                return Ok(mapper.Map<KontigentKarataDto>(kontigentKarataUpdateDto));*/
+                KontingentKarataDto kontingentKarataDto = mapper.Map<KontingentKarataDto>(kontingentKarataEntity);
+                return Ok(kontingentKarataDto);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound("KontingentKarata with the specified ID not found.");
             }
             catch (Exception e)
             {
@@ -167,8 +155,8 @@ namespace EONIS_IT34_2020.Controllers
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
-        [HttpDelete("{Id_kontigentKarata}")]
-        public IActionResult DeleteKontigentKarata(Guid Id_kontigentKarata)
+        [HttpDelete("{Id_kontingentKarata}")]
+        public IActionResult DeleteKontingentKarata(Guid Id_kontingentKarata)
         {
             try
             {
@@ -180,17 +168,17 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); //"You don't have permission to delete kontingentKarata."
                 }*/
 
-                var kontigentKarata = kontigentKarataRepository.GetKontigentKarataById(Id_kontigentKarata);
-                if (kontigentKarata == null)
+                var kontingentKarata = kontingentKarataRepository.GetKontingentKarataById(Id_kontingentKarata);
+                if (kontingentKarata == null)
                 {
-                    return NotFound();
+                    return NotFound("KontingentKarata with the specified ID not found.");
                 }
 
-                kontigentKarataRepository.DeleteKontigentKarata(Id_kontigentKarata);
-                kontigentKarataRepository.SaveChanges();
+                kontingentKarataRepository.DeleteKontingentKarata(Id_kontingentKarata);
+                kontingentKarataRepository.SaveChanges();
                 return StatusCode(StatusCodes.Status204NoContent);
             }
             catch
@@ -198,6 +186,5 @@ namespace EONIS_IT34_2020.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Delete Error");
             }
         }
-
     }
 }

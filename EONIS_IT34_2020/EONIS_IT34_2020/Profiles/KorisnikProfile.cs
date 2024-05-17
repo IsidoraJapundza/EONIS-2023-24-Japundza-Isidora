@@ -8,7 +8,6 @@ namespace EONIS_IT34_2020.Profiles
     {
         public KorisnikProfile()
         {
-
             CreateMap<Korisnik, KorisnikDto>().ReverseMap();
             CreateMap<Korisnik, KorisnikCreationDto>().ReverseMap();
             CreateMap<Korisnik, KorisnikUpdateDto>().ReverseMap();

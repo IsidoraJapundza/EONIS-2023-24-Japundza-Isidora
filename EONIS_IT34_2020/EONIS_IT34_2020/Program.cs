@@ -1,7 +1,7 @@
 using EONIS_IT34_2020.Data;
 using EONIS_IT34_2020.Data.AdministratorRepository;
 using EONIS_IT34_2020.Data.DogadjajRepository;
-using EONIS_IT34_2020.Data.KontigentKarataRepository;
+using EONIS_IT34_2020.Data.KontingentKarataRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Data.PorudzbinaRepository;
 using EONIS_IT34_2020.Helpers;
@@ -36,7 +36,7 @@ builder.Services.AddDbContext<DatabaseContextDB>(options =>
 
 builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
 builder.Services.AddScoped<IDogadjajRepository, DogadjajRepository>();
-builder.Services.AddScoped<IKontigentKarataRepository, KontigentKarataRepository>();
+builder.Services.AddScoped<IKontingentKarataRepository, KontingentKarataRepository>();
 builder.Services.AddScoped<IKorisnikRepository, KorisnikRepository>();
 builder.Services.AddScoped<IPorudzbinaRepository, PorudzbinaRepository>();
 builder.Services.AddScoped<IAuthHelper, AuthHelper>();

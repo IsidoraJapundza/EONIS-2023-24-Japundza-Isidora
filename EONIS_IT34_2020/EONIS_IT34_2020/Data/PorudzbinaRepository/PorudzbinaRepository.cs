@@ -25,9 +25,9 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             return this.context.Porudzbina.ToList();
         }
 
-        public Porudzbina GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontigentKarata)
+        public Porudzbina GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontingentKarata)
         {
-            return this.context.Porudzbina.FirstOrDefault(e => e.Id_korisnik == Id_korisnik && e.Id_kontigentKarata == Id_kontigentKarata);
+            return this.context.Porudzbina.FirstOrDefault(e => e.Id_korisnik == Id_korisnik && e.Id_kontingentKarata == Id_kontingentKarata);
         }
 
         public Porudzbina CreatePorudzbina(Porudzbina porudzbina)
@@ -41,7 +41,7 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
         {
             try
             {
-                var existingPorudzbina = this.context.Porudzbina.FirstOrDefault(e => (e.Id_korisnik == porudzbina.Id_korisnik && e.Id_kontigentKarata == porudzbina.Id_kontigentKarata));
+                var existingPorudzbina = this.context.Porudzbina.FirstOrDefault(e => (e.Id_korisnik == porudzbina.Id_korisnik && e.Id_kontingentKarata == porudzbina.Id_kontingentKarata));
 
                 if (existingPorudzbina != null)
                 {
@@ -55,14 +55,14 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
                     existingPorudzbina.AdresaIsporuke = porudzbina.AdresaIsporuke;
                     existingPorudzbina.DodatneNapomene = porudzbina.DodatneNapomene;
                     existingPorudzbina.Id_korisnik = porudzbina.Id_korisnik;
-                    existingPorudzbina.Id_kontigentKarata = porudzbina.Id_kontigentKarata;
+                    existingPorudzbina.Id_kontingentKarata = porudzbina.Id_kontingentKarata;
                     this.context.SaveChanges();
 
                     return existingPorudzbina;
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"Porudzbina with IDs {porudzbina.Id_korisnik} and {porudzbina.Id_kontigentKarata} not found.");
+                    throw new KeyNotFoundException($"Porudzbina with IDs {porudzbina.Id_korisnik} and {porudzbina.Id_kontingentKarata} not found.");
                 }
             }
             catch (Exception ex)
@@ -71,9 +71,9 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             }
         }
 
-        public void DeletePorudzbina(Guid Id_korisnik, Guid Id_kontigentKarata)
+        public void DeletePorudzbina(Guid Id_korisnik, Guid Id_kontingentKarata)
         {
-            var deletedPorudzbina = GetPorudzbinaById(Id_korisnik, Id_kontigentKarata);
+            var deletedPorudzbina = GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
             context.Remove(deletedPorudzbina);
             this.context.SaveChanges();
         }

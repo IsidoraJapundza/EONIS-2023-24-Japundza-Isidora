@@ -7,9 +7,11 @@ namespace EONIS_IT34_2020.Data.AdministratorRepository
     {
         List<Administrator> GetAdministrator();
         Administrator GetAdministratorById(Guid Id_administrator);
-        //Administrator GetAdministratorByKorisnickoIme(string korisnickoIme);
+        
+        Administrator GetAdministratorByKorisnickoIme(String korisnickoIme);
+
         Administrator CreateAdministrator(AdministratorCreationDto administrator);
-        void UpdateAdministrator(Administrator administrator); // izmeniti
+        Administrator UpdateAdministrator(AdministratorUpdateDto administrator); 
         void DeleteAdministrator(Guid Id_administrator);
         void DeleteAdministrator(string korisnickoIme);
         bool SaveChanges();

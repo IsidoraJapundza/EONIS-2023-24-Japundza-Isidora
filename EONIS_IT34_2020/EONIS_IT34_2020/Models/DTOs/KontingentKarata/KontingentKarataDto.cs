@@ -1,8 +1,8 @@
-﻿namespace EONIS_IT34_2020.Models.DTOs.KontigentKarata
+﻿namespace EONIS_IT34_2020.Models.DTOs.KontingentKarata
 {
-    public class KontigentKarataDto
+    public class KontingentKarataDto
     {
-        public Guid Id_kontigentKarata { get; set; }
+        public Guid Id_kontingentKarata { get; set; }
         public String NazivKarte { get; set; }
         public String Sektor { get; set; }
         public String Ulaz { get; set; }

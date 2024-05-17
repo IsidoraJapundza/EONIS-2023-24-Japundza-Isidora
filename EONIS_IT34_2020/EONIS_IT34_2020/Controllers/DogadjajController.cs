@@ -27,15 +27,9 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<List<DogadjajDto>> GetDogadjaj(int page = 1, int pageSize = 10)
         {
-            
-            /*if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
-            }*/
-             
+                        
             var dogadjaji = dogadjajRepository.GetDogadjaj();
 
             if (dogadjaji == null || dogadjaji.Count == 0)
@@ -53,13 +47,11 @@ namespace EONIS_IT34_2020.Controllers
             var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
             if (totalPages < page || page <= 0)
             {
-                return NoContent();
+                return StatusCode(StatusCodes.Status204NoContent, "Dogadjaj successfully deleted."); // izmeniti
             }
             var itemsPerPage = dogadjajiDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return Ok(itemsPerPage);
-
-            //return Ok(dogadjajiDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,7 +64,7 @@ namespace EONIS_IT34_2020.Controllers
 
             if (dogadjaj == null)
             {
-                return NotFound();
+                return NotFound("Dogadjaj with the specified ID not found.");
             }
             return Ok(mapper.Map<DogadjajDto>(dogadjaj));
         }
@@ -93,7 +85,7 @@ namespace EONIS_IT34_2020.Controllers
             }
 
             try
-            {               
+            {
                 /*if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
@@ -102,7 +94,7 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); // "You don't have permission to create dogadjaj."
                 }*/
 
                 Dogadjaj dogadjajEntity = mapper.Map<Dogadjaj>(dogadjajCreationDto);
@@ -137,7 +129,7 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); //"You don't have permission to update dogadjaj."
                 }*/
 
                 Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
@@ -146,22 +138,10 @@ namespace EONIS_IT34_2020.Controllers
 
                 DogadjajDto dogadjajDto = mapper.Map<DogadjajDto>(dogadjajEntity);
                 return Ok(dogadjajDto);
-
-                /*Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
-
-                var dogadjajEntity = dogadjajRepository.GetDogadjajById(dogadjajUpdateDto.Id_dogadjaj);
-
-                if (dogadjajEntity == null)
-                {
-                    return NotFound();
-                }
-
-                dogadjajRepository.UpdateDogadjaj(mapper.Map<Dogadjaj>(dogadjajUpdateDto));
-                return Ok(mapper.Map<DogadjajDto>(dogadjajUpdateDto));*/
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound("Dogadjaj with the specified ID not found.");
             }
             catch (Exception e)
             {
@@ -189,18 +169,18 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); // "You don't have permission to delete dogadjaj."
                 }*/
 
                 var dogadjaj = dogadjajRepository.GetDogadjajById(Id_dogadjaj);
                 if (dogadjaj == null)
                 {
-                    return NotFound();
+                    return NotFound("Dogadjaj with specified ID not found.");
                 }
 
                 dogadjajRepository.DeleteDogadjaj(Id_dogadjaj);
                 dogadjajRepository.SaveChanges();
-                return StatusCode(StatusCodes.Status204NoContent);
+                return StatusCode(StatusCodes.Status204NoContent, "\"Dogadjaj with the specified ID successfully deleted.\"");
             }
             catch
             {

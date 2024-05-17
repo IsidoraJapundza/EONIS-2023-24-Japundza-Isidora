@@ -12,6 +12,6 @@
         public String? AdresaIsporuke { get; set; }
         public String? DodatneNapomene { get; set; }
         public Guid Id_korisnik { get; set; }
-        public Guid Id_kontigentKarata { get; set; }
+        public Guid Id_kontingentKarata { get; set; }
     }
 }

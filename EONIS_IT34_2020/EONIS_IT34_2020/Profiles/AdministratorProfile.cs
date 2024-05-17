@@ -8,7 +8,6 @@ namespace EONIS_IT34_2020.Profiles
     {
         public AdministratorProfile()
         {
-
             CreateMap<Administrator, AdministratorDto>().ReverseMap();
             CreateMap<Administrator, AdministratorCreationDto>().ReverseMap();
             CreateMap<Administrator, AdministratorUpdateDto>().ReverseMap();

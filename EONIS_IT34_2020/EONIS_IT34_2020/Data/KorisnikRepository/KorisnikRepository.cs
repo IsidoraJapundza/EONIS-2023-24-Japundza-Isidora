@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
+using System.Data.SqlTypes;
 using System.Net.WebSockets;
 using System.Security.Cryptography;
 
@@ -30,7 +31,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
 
         public Korisnik GetKorisnikById(Guid Id_korisnik)
         {
-            return context.Korisnik.FirstOrDefault(e => e.Id_korisnik == Id_korisnik);
+            return this.context.Korisnik.FirstOrDefault(e => e.Id_korisnik == Id_korisnik);
         }
 
         public Korisnik GetKorisnikByKorisnickoIme(string korisnickoIme)
@@ -105,7 +106,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
             {
                 return false;
             }
-            if (VerifyPassword(lozinka, Convert.ToBase64String(korisnik.LozinkaKorisnikaHashed), korisnik.saltKorisnika))
+            if (VerifyPassword(lozinka, Convert.ToBase64String(korisnik.LozinkaKorisnikaHashed)))//, korisnik.saltKorisnika))
             {
                 return true;
             }
@@ -113,10 +114,11 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         }
 
         // helpers
-        public bool VerifyPassword(string lozinka, string lozinkaHashed, byte[] salt)
+        public bool VerifyPassword(string lozinka, string lozinkaHashed) //, byte[] salt)
         {
-            var saltBytes = salt;
-            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(lozinka, saltBytes, iterations);
+            //var saltBytes = salt;
+            //var rfc2898DeriveBytes = new Rfc2898DeriveBytes(lozinka, saltBytes, iterations);
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(lozinka, iterations);
             if (Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == lozinkaHashed)
             {
                 return true;

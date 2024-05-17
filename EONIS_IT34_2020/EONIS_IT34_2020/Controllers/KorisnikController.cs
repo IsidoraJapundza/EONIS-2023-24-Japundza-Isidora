@@ -29,7 +29,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<KorisnikDto>> GetKorisnik(int page = 1, int pageSize = 1)
+        public ActionResult<List<KorisnikDto>> GetKorisnik(int page = 1, int pageSize = 10)
         {
             /*
               if (!HttpContext.User.Identity.IsAuthenticated)
@@ -69,9 +69,10 @@ namespace EONIS_IT34_2020.Controllers
             //return Ok(korisniciDto);
         }
 
+
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("{Id_korisnik}")]
+        [HttpGet("{Id_korisnik}")] //
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator, Korisnik")]
@@ -93,7 +94,7 @@ namespace EONIS_IT34_2020.Controllers
             
             if (korisnik == null)
             {
-                return NotFound();
+                return NotFound("Korisnik with the specified ID not found.");
             }
             return Ok(mapper.Map<KorisnikDto>(korisnik));
         }
@@ -101,7 +102,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        [HttpGet("{KorisnickoImeKorisnika}")]
+        [HttpGet("korisnickoIme/{KorisnickoImeKorisnika}")]
         public ActionResult<KorisnikDto> GetKorisnikByKorisnickoIme(string korisnickoIme)
         {
 
@@ -109,7 +110,7 @@ namespace EONIS_IT34_2020.Controllers
 
             if (korisnik == null)
             {
-                return NotFound();
+                return NotFound("Korisnik with the specified KorisnickoIme not found.");
             }
 
             return mapper.Map<KorisnikDto>(korisnik);
@@ -164,9 +165,11 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); // "You don't have permission to update korisnik."
                 } 
                  */
+
+                Korisnik korisnik = mapper.Map<Korisnik>(korisnikUpdateDto);
 
                 var updatedKorisnik = korisnikRepository.UpdateKorisnik(korisnikUpdateDto);
 
@@ -211,12 +214,12 @@ namespace EONIS_IT34_2020.Controllers
                 var korisnik = korisnikRepository.GetKorisnikById(Id_korisnik);
                 if (korisnik == null)
                 {
-                    return NotFound();
+                    return NotFound("Korisnik with the specified ID not found.");
                 }
 
                 korisnikRepository.DeleteKorisnik(Id_korisnik);
                 korisnikRepository.SaveChanges();
-                return StatusCode(StatusCodes.Status204NoContent);
+                return StatusCode(StatusCodes.Status204NoContent, "\"Korisnik with the specified ID successfully deleted.\"");
             }
             catch
             {

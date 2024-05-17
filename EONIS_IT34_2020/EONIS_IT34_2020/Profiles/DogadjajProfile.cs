@@ -8,7 +8,6 @@ namespace EONIS_IT34_2020.Profiles
     {
         public DogadjajProfile()
         {
-
             CreateMap<Dogadjaj, DogadjajDto>().ReverseMap();
             CreateMap<Dogadjaj, DogadjajCreationDto>().ReverseMap();
             CreateMap<Dogadjaj, DogadjajUpdateDto>().ReverseMap();

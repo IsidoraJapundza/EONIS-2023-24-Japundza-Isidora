@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EONIS_IT34_2020.Models.Entities
 {
     [Table("Porudzbina")]
-    [PrimaryKey(nameof(Id_korisnik), nameof(Id_kontigentKarata))]
+    [PrimaryKey(nameof(Id_korisnik), nameof(Id_kontingentKarata))]
     public class Porudzbina
     {
         public DateOnly DatumPorudzbine { get; set; }
@@ -18,7 +18,7 @@ namespace EONIS_IT34_2020.Models.Entities
         public String? AdresaIsporuke { get; set; }
         public String? DodatneNapomene { get; set; }
         public Guid Id_korisnik { get; set; }
-        public Guid Id_kontigentKarata { get; set; }
+        public Guid Id_kontingentKarata { get; set; }
 
     }
 }

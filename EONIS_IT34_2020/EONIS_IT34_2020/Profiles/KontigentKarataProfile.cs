@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Models.DTOs.KontigentKarata;
+using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
 using EONIS_IT34_2020.Models.Entities;
 
 namespace EONIS_IT34_2020.Profiles
@@ -8,10 +8,9 @@ namespace EONIS_IT34_2020.Profiles
     {
         public KontigentKarataProfile()
         {
-
-            CreateMap<KontigentKarata, KontigentKarataDto>().ReverseMap();
-            CreateMap<KontigentKarata, KontigentKarataCreationDto>().ReverseMap();
-            CreateMap<KontigentKarata, KontigentKarataUpdateDto>().ReverseMap();
+            CreateMap<KontingentKarata, KontingentKarataDto>().ReverseMap();
+            CreateMap<KontingentKarata, KontingentKarataCreationDto>().ReverseMap();
+            CreateMap<KontingentKarata, KontingentKarataUpdateDto>().ReverseMap();
         }
     }
 }

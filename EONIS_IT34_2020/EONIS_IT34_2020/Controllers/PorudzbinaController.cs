@@ -63,8 +63,6 @@ namespace EONIS_IT34_2020.Controllers
             var itemsPerPage = porudzbineDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return Ok(itemsPerPage);
-
-            //return Ok(porudzbineDto);
         }
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,8 +70,8 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator, Korisnik")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{Id_korisnik}/{Id_kontigentKarata}")]
-        public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontigentKarata)
+        [HttpGet("{Id_korisnik}/{Id_kontingentKarata}")]
+        public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontingentKarata)
         {
             /*
              if (!HttpContext.User.Identity.IsAuthenticated)
@@ -87,11 +85,11 @@ namespace EONIS_IT34_2020.Controllers
                 return Forbid();
             }
              */
-            var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontigentKarata);
+            var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
 
             if (porudzbina == null)
             {
-                return NotFound();
+                return NotFound("Porudzbina with the specified ID not found.");
             }
 
             return mapper.Map<PorudzbinaDto>(porudzbina);
@@ -122,7 +120,7 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); "You don't have permission to create porudzbina."
                 }*/
 
                 Porudzbina porudzbinaEntity = mapper.Map<Porudzbina>(porudzbinaCreationDto);
@@ -157,7 +155,7 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); //"You don't have permission to create porudzbina."
                 }
                  */
 
@@ -170,7 +168,7 @@ namespace EONIS_IT34_2020.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound("Porudzbina with the specified ID not found.");
             }
             catch (Exception ex)
             {
@@ -184,10 +182,9 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[HttpGet("{Id_porudzbina}/{Id_korisnik}/{Id_kontigentKarata}")]
-        [HttpDelete("{Id_korisnik}/{Id_kontigentKarata}")]
+        [HttpDelete("{Id_korisnik}/{Id_kontingentKarata}")]
         //[Authorize(Roles = "Administrator")]
-        public IActionResult DeletePorudzbina(Guid Id_korisnik, Guid Id_kontigentKarata)
+        public IActionResult DeletePorudzbina(Guid Id_korisnik, Guid Id_kontingentKarata)
         {
             try
             {
@@ -199,16 +196,16 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid();
+                    return Forbid(); // "You don't have permission to create porudzbina."
                 }*/
 
-                var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontigentKarata);
+                var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
                 if (porudzbina == null)
                 {
-                    return NotFound();
+                    return NotFound("Porudzbina with the specified ID not found.");
                 }
 
-                porudzbinaRepository.DeletePorudzbina(Id_korisnik, Id_kontigentKarata);
+                porudzbinaRepository.DeletePorudzbina(Id_korisnik, Id_kontingentKarata);
 
                 return NoContent();
             }
