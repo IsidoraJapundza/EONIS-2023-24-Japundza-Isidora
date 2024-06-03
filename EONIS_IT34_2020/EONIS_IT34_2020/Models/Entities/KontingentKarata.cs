@@ -14,8 +14,7 @@ namespace EONIS_IT34_2020.Models.Entities
         public int Cena { get; set; }
         public int Kolicina { get; set; }
         public String Napomena { get; set; }
-        public Guid Id_administrator { get; set; }
-        public Guid Id_dogadjaj { get; set; }
-
+        public Guid? Id_administrator { get; set; }
+        public Guid? Id_dogadjaj { get; set; }
     }
 }

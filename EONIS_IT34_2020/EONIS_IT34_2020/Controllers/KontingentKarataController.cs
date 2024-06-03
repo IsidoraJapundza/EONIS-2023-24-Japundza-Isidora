@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Data.KontingentKarataRepository;
+using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
+using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -27,9 +29,14 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<KontingentKarataDto>> GetKontingentKarata(int page = 1, int pageSize = 10)
+        public ActionResult<List<KontingentKarataDto>> GetKontingentKarata(int page = 1, int pageSize = 10, bool sortByCena = false, string sortOrder = "asc")
         {
             var kontingentiKarata = kontingentKarataRepository.GetKontingentKarata();
+
+            if (sortByCena)
+            {
+                kontingentiKarata = sortOrder.ToLower() == "asc" ? kontingentiKarata.OrderBy(a => a.Cena).ToList() : kontingentiKarata.OrderByDescending(a => a.Cena).ToList();
+            }
 
             if (kontingentiKarata == null || kontingentiKarata.Count == 0) 
             {
@@ -68,6 +75,28 @@ namespace EONIS_IT34_2020.Controllers
             return Ok(mapper.Map<KontingentKarataDto>(kontingentKarata));
         }
 
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        [HttpGet("nazivKarte/{naziv}")]
+        public ActionResult<List<KontingentKarataDto>> GetKontingentKarataByNaziv(string naziv)
+        {
+
+            var kontingentiKarata = kontingentKarataRepository.GetKontingentKarataByNaziv(naziv);
+
+            if (kontingentiKarata == null || kontingentiKarata.Count == 0)
+            {
+                return NotFound("KontigentKarata with the specified NazivKarte not found.");
+            }
+
+            List<KontingentKarataDto> kontingentiKarataDto = new List<KontingentKarataDto>();
+            foreach (var kontingentKarata in kontingentiKarata)
+            {
+                kontingentiKarataDto.Add(mapper.Map<KontingentKarataDto>(kontingentKarata));
+            }
+
+            return mapper.Map<List<KontingentKarataDto>>(kontingentiKarataDto);
+        }
 
         [HttpPost]
         [Consumes("application/json")]

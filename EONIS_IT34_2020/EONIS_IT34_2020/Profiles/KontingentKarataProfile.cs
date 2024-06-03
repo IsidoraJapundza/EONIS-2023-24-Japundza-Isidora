@@ -4,9 +4,9 @@ using EONIS_IT34_2020.Models.Entities;
 
 namespace EONIS_IT34_2020.Profiles
 {
-    public class KontigentKarataProfile : Profile
+    public class KontingentKarataProfile : Profile
     {
-        public KontigentKarataProfile()
+        public KontingentKarataProfile()
         {
             CreateMap<KontingentKarata, KontingentKarataDto>().ReverseMap();
             CreateMap<KontingentKarata, KontingentKarataCreationDto>().ReverseMap();

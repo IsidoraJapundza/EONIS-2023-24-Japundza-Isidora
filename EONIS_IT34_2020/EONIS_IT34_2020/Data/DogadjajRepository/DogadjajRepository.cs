@@ -30,18 +30,17 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
             return this.context.Dogadjaj.FirstOrDefault(e => e.Id_dogadjaj == Id_dogadjaj);
         }
 
+        public List<Dogadjaj> GetDogadjajByNaziv(string naziv)
+        {
+            return context.Dogadjaj.Where(e => e.NazivSportskogDogadjaja.Contains(naziv)).ToList();
+        }
+
         public Dogadjaj CreateDogadjaj(Dogadjaj dogadjaj)
         {
             var createdDogadjaj = this.context.Dogadjaj.Add(dogadjaj);
             this.context.SaveChanges();
             return mapper.Map<Dogadjaj>(createdDogadjaj.Entity);
         }
-
-        /*public void UpdateDogadjaj(Dogadjaj dogadjaj)
-        {
-            /*
-               Nije potrebna implementacija jer EF core prati entitet koji smo izvukli iz baze i kada promenimo taj objekat i odradimo SaveChanges sve izmene će biti perzistirane.
-        }*/
 
         public Dogadjaj UpdateDogadjaj(Dogadjaj dogadjaj)
         {

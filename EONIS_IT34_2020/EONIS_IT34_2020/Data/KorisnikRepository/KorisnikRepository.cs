@@ -43,6 +43,7 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
         {
             Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
             korisnikEntity.Id_korisnik = Guid.NewGuid();
+            korisnikEntity.DatumRegistracijeKorisnika = DateOnly.FromDateTime(DateTime.Now);
             // lozinka 
             var lozinkaKorisnikaHashed = HashPassword(korisnik.LozinkaKorisnika);
             korisnikEntity.LozinkaKorisnikaHashed = Convert.FromBase64String(lozinkaKorisnikaHashed.Item1);
@@ -70,7 +71,6 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
                     existingKorisnik.PrebivalisteKorisnika = korisnik.PrebivalisteKorisnika;
                     existingKorisnik.PostanskiBroj = korisnik.PostanskiBroj;
                     existingKorisnik.DatumRodjenjaKorisnika = korisnik.DatumRodjenjaKorisnika; //DateOnly.Parse(korisnik.DatumRodjenjaKorisnika);
-                    existingKorisnik.DatumRegistracijeKorisnika = korisnik.DatumRegistracijeKorisnika; //DateOnly.Parse(korisnik.DatumRegistracijeKorisnika);
 
                     var novaLozinkaHashed = HashPassword(korisnik.LozinkaKorisnika);
                     existingKorisnik.LozinkaKorisnikaHashed = Convert.FromBase64String(novaLozinkaHashed.Item1);
@@ -96,6 +96,28 @@ namespace EONIS_IT34_2020.Data.KorisnikRepository
             var deletedKorisnik = GetKorisnikById(Id_korisnik);
             this.context.Remove(deletedKorisnik);
             this.context.SaveChanges();
+        }
+
+        public void DeleteKorisnik(string korisnickoIme)
+        {
+            try
+            {
+                var korisnik = context.Korisnik.FirstOrDefault(e => e.KorisnickoImeKorisnika == korisnickoIme);
+
+                if (korisnik != null)
+                {
+                    context.Korisnik.Remove(korisnik);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Korisnik with username {korisnickoIme} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error deleting Korisnik!", ex);
+            }
         }
 
         public bool KorisnikWithCredentialsExists(string korisnickoIme, string lozinka)

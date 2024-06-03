@@ -7,6 +7,7 @@ namespace EONIS_IT34_2020.Data.DogadjajRepository
     {
         List<Dogadjaj> GetDogadjaj();
         Dogadjaj GetDogadjajById(Guid Id_dogadjaj);
+        List<Dogadjaj> GetDogadjajByNaziv(string naziv);
         Dogadjaj CreateDogadjaj(Dogadjaj dogadjaj);
         Dogadjaj UpdateDogadjaj(Dogadjaj dogadjaj);
         void DeleteDogadjaj(Guid Id_dogadjaj);

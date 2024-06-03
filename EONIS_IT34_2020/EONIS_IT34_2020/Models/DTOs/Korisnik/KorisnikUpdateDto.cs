@@ -13,6 +13,5 @@
         public String? PrebivalisteKorisnika { get; set; }
         public int? PostanskiBroj { get; set; }
         public DateOnly DatumRodjenjaKorisnika { get; set; }
-        public DateOnly DatumRegistracijeKorisnika { get; set; }
     }
 }

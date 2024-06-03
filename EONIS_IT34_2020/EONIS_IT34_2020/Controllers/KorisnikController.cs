@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EONIS_IT34_2020.Data.AdministratorRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
@@ -29,7 +30,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<KorisnikDto>> GetKorisnik(int page = 1, int pageSize = 10)
+        public ActionResult<List<KorisnikDto>> GetKorisnik(int page = 1, int pageSize = 10, bool sortByKorisnickoIme = false, string sortOrder = "asc")
         {
             /*
               if (!HttpContext.User.Identity.IsAuthenticated)
@@ -44,6 +45,11 @@ namespace EONIS_IT34_2020.Controllers
             }
             */
             var korisnici = korisnikRepository.GetKorisnik();
+
+            if (sortByKorisnickoIme)
+            {
+                korisnici = sortOrder.ToLower() == "asc" ? korisnici.OrderBy(a => a.KorisnickoImeKorisnika).ToList() : korisnici.OrderByDescending(a => a.KorisnickoImeKorisnika).ToList();
+            }
 
             if (korisnici == null || korisnici.Count == 0)
             {
@@ -101,8 +107,9 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = "Administrator")] //korisnik?
         [AllowAnonymous]
-        [HttpGet("korisnickoIme/{KorisnickoImeKorisnika}")]
+        [HttpGet("username/{korisnickoIme}")]
         public ActionResult<KorisnikDto> GetKorisnikByKorisnickoIme(string korisnickoIme)
         {
 
@@ -225,6 +232,41 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Delete Error");
             }
-        }      
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete("korisnickoIme/{KorisnickoImeKorisnika}")]
+        //[Authorize(Roles = "Administrator")]
+        public IActionResult DeleteKorisnikByKorisnickoIme(string korisnickoIme)
+        {
+            try
+            {
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+                Korisnik korisnik = korisnikRepository.GetKorisnikByKorisnickoIme(korisnickoIme);
+                if (korisnik == null)
+                {
+                    return NotFound("Korisnik with the specified username not found.");
+                }
+
+                korisnikRepository.DeleteKorisnik(korisnickoIme);
+                korisnikRepository.SaveChanges();
+                return StatusCode(StatusCodes.Status204NoContent, "\"Korisnik with the specified username successfully deleted.\"");
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Delete Error");
+            }
+        }
     }
 }

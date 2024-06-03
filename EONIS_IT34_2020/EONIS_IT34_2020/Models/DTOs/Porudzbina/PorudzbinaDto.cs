@@ -2,10 +2,11 @@
 {
     public class PorudzbinaDto
     {
+        public Guid Id_porudzbina { get; set; }
         public DateOnly DatumPorudzbine { get; set; }
         public TimeOnly VremePorudzbine { get; set; }
         public int BrojKarata { get; set; }
-        public int UkupnaCena { get; set; } //
+        public int UkupnaCena { get; set; } 
         public String StatusPorudzbine { get; set; }
         public String? PotvrdaPlacanja { get; set; }
         public String? MetodaIsporuke { get; set; }

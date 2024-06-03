@@ -25,15 +25,50 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             return this.context.Porudzbina.ToList();
         }
 
-        public Porudzbina GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontingentKarata)
+        public Porudzbina GetExactPorudzbina(Guid Id_porudzbina)
         {
-            return this.context.Porudzbina.FirstOrDefault(e => e.Id_korisnik == Id_korisnik && e.Id_kontingentKarata == Id_kontingentKarata);
+            return this.context.Porudzbina.FirstOrDefault(e => e.Id_porudzbina == e.Id_porudzbina);
         }
+
+
+        public Porudzbina GetPorudzbinaById(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontingentKarata)
+        {
+            return this.context.Porudzbina.FirstOrDefault(e => e.Id_porudzbina == e.Id_porudzbina && e.Id_korisnik == Id_korisnik && e.Id_kontingentKarata == Id_kontingentKarata);
+        }
+
+        public List<Porudzbina> GetPorudzbinaByKorisnik(Guid Id_korisnik)
+        {
+            return this.context.Porudzbina.Where(e => e.Id_korisnik == Id_korisnik).ToList();
+        }
+
 
         public Porudzbina CreatePorudzbina(Porudzbina porudzbina)
         {
+            porudzbina.Id_porudzbina = Guid.NewGuid();
+
+            var kontingentKarataEntity = context.KontingentKarata.FirstOrDefault(kk => kk.Id_kontingentKarata == porudzbina.Id_kontingentKarata);
+            
+            if (kontingentKarataEntity == null)
+            {
+                throw new Exception("KontingentKarata not found.");
+            }
+
+            porudzbina.DatumPorudzbine= DateOnly.FromDateTime(DateTime.Now);
+            porudzbina.VremePorudzbine = TimeOnly.FromDateTime(DateTime.Now);
+            porudzbina.UkupnaCena = porudzbina.BrojKarata * kontingentKarataEntity.Cena;
+
             var createdPorudzbina = this.context.Porudzbina.Add(porudzbina);
             this.context.SaveChanges();
+
+            // Log pre 
+            Console.WriteLine("Pre reload-a: " + createdPorudzbina.Entity.UkupnaCena);
+
+            // Reload entiteta da bi se povukle promene napravljene trigerom
+            context.Entry(createdPorudzbina.Entity).Reload();
+
+            // Log posle 
+            Console.WriteLine("Posle reload-a: " + createdPorudzbina.Entity.UkupnaCena);
+
             return mapper.Map<Porudzbina>(createdPorudzbina.Entity);
         }
 
@@ -45,10 +80,7 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
 
                 if (existingPorudzbina != null)
                 {
-                    existingPorudzbina.DatumPorudzbine = porudzbina.DatumPorudzbine;
-                    existingPorudzbina.VremePorudzbine = porudzbina.VremePorudzbine;
                     existingPorudzbina.BrojKarata = porudzbina.BrojKarata;
-                    existingPorudzbina.UkupnaCena = porudzbina.UkupnaCena;
                     existingPorudzbina.StatusPorudzbine = porudzbina.StatusPorudzbine;
                     existingPorudzbina.PotvrdaPlacanja = porudzbina.PotvrdaPlacanja;
                     existingPorudzbina.MetodaIsporuke = porudzbina.MetodaIsporuke;
@@ -71,9 +103,9 @@ namespace EONIS_IT34_2020.Data.PorudzbinaRepository
             }
         }
 
-        public void DeletePorudzbina(Guid Id_korisnik, Guid Id_kontingentKarata)
+        public void DeletePorudzbina(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontingentKarata)
         {
-            var deletedPorudzbina = GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
+            var deletedPorudzbina = GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
             context.Remove(deletedPorudzbina);
             this.context.SaveChanges();
         }

@@ -30,7 +30,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<AdministratorDto>> GetAdministrator(int page = 1, int pageSize = 10)
+        public ActionResult<List<AdministratorDto>> GetAdministrator(int page = 1, int pageSize = 10, bool sortByKorisnickoIme = false, string sortOrder = "asc")
         {
             /*
              if (!HttpContext.User.Identity.IsAuthenticated)
@@ -46,6 +46,11 @@ namespace EONIS_IT34_2020.Controllers
            */
 
             var administratori = administratorRepository.GetAdministrator();
+
+            if (sortByKorisnickoIme)
+            {
+                administratori = sortOrder.ToLower() == "asc" ? administratori.OrderBy(a => a.KorisnickoImeAdministratora).ToList() : administratori.OrderByDescending(a => a.KorisnickoImeAdministratora).ToList();
+            }
 
             if (administratori == null || administratori.Count == 0)
             {
@@ -101,7 +106,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        [HttpGet("korisnickoIme/{KorisnickoImeAdministratora}")]
+        [HttpGet("username/{korisnickoIme}")]
         public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string korisnickoIme)
         {
 
@@ -215,6 +220,41 @@ namespace EONIS_IT34_2020.Controllers
                 administratorRepository.DeleteAdministrator(Id_administrator);
                 administratorRepository.SaveChanges();
                 return StatusCode(StatusCodes.Status204NoContent, "\"Administrator with the specified ID successfully deleted.\"");
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Delete Error");
+            }
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete("korisnickoIme/{KorisnickoImeAdministratora}")]
+        //[Authorize(Roles = "Administrator")]
+        public IActionResult DeleteAdministratorByKorisnickoIme(string korisnickoIme)
+        {
+            try
+            {
+                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                {
+                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+                }
+                var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+                if (roleClaim == null)
+                {
+                    return Forbid();
+                }*/
+                Administrator administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoIme);
+                if (administrator == null)
+                {
+                    return NotFound("Administrator with the specified username not found.");
+                }
+
+                administratorRepository.DeleteAdministrator(korisnickoIme);
+                administratorRepository.SaveChanges();
+                return StatusCode(StatusCodes.Status204NoContent, "\"Administrator with the specified username successfully deleted.\"");
             }
             catch
             {

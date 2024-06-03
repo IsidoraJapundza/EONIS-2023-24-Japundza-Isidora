@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using EONIS_IT34_2020.Data.KontingentKarataRepository;
 using EONIS_IT34_2020.Data.PorudzbinaRepository;
+using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
 using EONIS_IT34_2020.Models.DTOs.Porudzbina;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EONIS_IT34_2020.Controllers
@@ -27,7 +31,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult<List<PorudzbinaDto>> GetPorudzbina(int page = 1, int pageSize = 10)
+        public ActionResult<List<PorudzbinaDto>> GetPorudzbina(int page = 1, int pageSize = 10, string? PotvrdaPlacanja = null, bool sortByUkupnaCena = false, string sortOrder = "asc")
         {
             /*
             if (!HttpContext.User.Identity.IsAuthenticated)
@@ -42,6 +46,16 @@ namespace EONIS_IT34_2020.Controllers
             }
             */
             var porudzbine = porudzbinaRepository.GetPorudzbina();
+
+            if(PotvrdaPlacanja != null)
+            {
+                porudzbine = porudzbine.Where(p => p.PotvrdaPlacanja.Equals(PotvrdaPlacanja)).ToList();
+            }
+
+            if (sortByUkupnaCena)
+            {
+                porudzbine = sortOrder.ToLower() == "asc" ? porudzbine.OrderBy(a => a.UkupnaCena).ToList() : porudzbine.OrderByDescending(a => a.UkupnaCena).ToList();
+            }
 
             if (porudzbine == null || porudzbine.Count == 0)
             {
@@ -70,8 +84,8 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator, Korisnik")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{Id_korisnik}/{Id_kontingentKarata}")]
-        public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_korisnik, Guid Id_kontingentKarata)
+        [HttpGet("{Id_porudzbina}")]
+        public ActionResult<PorudzbinaDto> GetExactPorudzbina(Guid Id_porudzbina)
         {
             /*
              if (!HttpContext.User.Identity.IsAuthenticated)
@@ -85,7 +99,37 @@ namespace EONIS_IT34_2020.Controllers
                 return Forbid();
             }
              */
-            var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
+            var porudzbina = porudzbinaRepository.GetExactPorudzbina(Id_porudzbina);
+
+            if (porudzbina == null)
+            {
+                return NotFound("Porudzbina with the specified ID not found.");
+            }
+
+            return mapper.Map<PorudzbinaDto>(porudzbina);
+        }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[Authorize(Roles = "Administrator, Korisnik")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpGet("{Id_porudzbina}/{Id_korisnik}/{Id_kontingentKarata}")]
+        public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontingentKarata)
+        {
+            /*
+             if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+             */
+            var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
 
             if (porudzbina == null)
             {
@@ -182,9 +226,9 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete("{Id_korisnik}/{Id_kontingentKarata}")]
+        [HttpDelete("{Id_porudzbina}/{Id_korisnik}/{Id_kontingentKarata}")]
         //[Authorize(Roles = "Administrator")]
-        public IActionResult DeletePorudzbina(Guid Id_korisnik, Guid Id_kontingentKarata)
+        public IActionResult DeletePorudzbina(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontingentKarata)
         {
             try
             {
@@ -199,13 +243,13 @@ namespace EONIS_IT34_2020.Controllers
                     return Forbid(); // "You don't have permission to create porudzbina."
                 }*/
 
-                var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_korisnik, Id_kontingentKarata);
+                var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
                 if (porudzbina == null)
                 {
                     return NotFound("Porudzbina with the specified ID not found.");
                 }
 
-                porudzbinaRepository.DeletePorudzbina(Id_korisnik, Id_kontingentKarata);
+                porudzbinaRepository.DeletePorudzbina(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
 
                 return NoContent();
             }
@@ -215,5 +259,42 @@ namespace EONIS_IT34_2020.Controllers
             }
         }
 
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[Authorize(Roles = "Administrator, Korisnik")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpGet("GetPorudzbinaByKorisnik/{Id_korisnik}")]
+        public ActionResult<List<PorudzbinaDto>> GetPorudzbinaByKorisnik(Guid Id_korisnik)
+        {
+            /*
+             if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+             */
+            var porudzbine = porudzbinaRepository.GetPorudzbinaByKorisnik(Id_korisnik);
+
+            if (porudzbine == null || porudzbine.Count == 0)
+            {
+                return NotFound("Porudzbina with the specified Korisnik not found.");
+
+            }
+
+            List<PorudzbinaDto> porudzbineDto = new List<PorudzbinaDto>();
+            foreach(var porudzbina in porudzbine)
+            {
+                porudzbineDto.Add(mapper.Map<PorudzbinaDto>(porudzbina));
+            }
+
+            return mapper.Map<List<PorudzbinaDto>>(porudzbineDto);
+        }
     }
 }

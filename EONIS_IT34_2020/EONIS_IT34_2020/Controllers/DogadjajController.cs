@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Data.DogadjajRepository;
+using EONIS_IT34_2020.Data.KorisnikRepository;
+using EONIS_IT34_2020.Data.PorudzbinaRepository;
 using EONIS_IT34_2020.Models.DTOs.Dogadjaj;
+using EONIS_IT34_2020.Models.DTOs.Korisnik;
+using EONIS_IT34_2020.Models.DTOs.Porudzbina;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 
 namespace EONIS_IT34_2020.Controllers
@@ -27,10 +32,16 @@ namespace EONIS_IT34_2020.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<DogadjajDto>> GetDogadjaj(int page = 1, int pageSize = 10)
+        public ActionResult<List<DogadjajDto>> GetDogadjaj(int page = 1, int pageSize = 10, bool sortByDatumOdrzavanja = false, string sortOrder = "asc")
         {
                         
             var dogadjaji = dogadjajRepository.GetDogadjaj();
+
+            if (sortByDatumOdrzavanja)
+            {
+                dogadjaji = sortOrder.ToLower() == "asc" ? dogadjaji.OrderBy(a => a.DatumOdrzavanja).ToList() : dogadjaji.OrderByDescending(a => a.DatumOdrzavanja).ToList();
+            }
+
 
             if (dogadjaji == null || dogadjaji.Count == 0)
             {
@@ -67,6 +78,28 @@ namespace EONIS_IT34_2020.Controllers
                 return NotFound("Dogadjaj with the specified ID not found.");
             }
             return Ok(mapper.Map<DogadjajDto>(dogadjaj));
+        }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        [HttpGet("naziv/{naziv}")]
+        public ActionResult<List<DogadjajDto>> GetDogadjajByNaziv(string naziv)
+        {
+
+            var dogadjaji = dogadjajRepository.GetDogadjajByNaziv(naziv);
+
+            if (dogadjaji == null || dogadjaji.Count == 0)
+            {
+                return NotFound("Dogadjaj with the specified NazivSporstkogDogadjaja not found.");
+            }
+
+            List<DogadjajDto> dogadjajiDto = new List<DogadjajDto>();
+            foreach (var dogadjaj in dogadjaji)
+            {
+                dogadjajiDto.Add(mapper.Map<DogadjajDto>(dogadjaj));
+            }
+            return mapper.Map<List<DogadjajDto>>(dogadjajiDto);
         }
 
 
