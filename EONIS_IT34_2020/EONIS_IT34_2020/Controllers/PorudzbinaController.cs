@@ -26,25 +26,25 @@ namespace EONIS_IT34_2020.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Administrator, Korisnik")]
+        //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<List<PorudzbinaDto>> GetPorudzbina(int page = 1, int pageSize = 10, string? PotvrdaPlacanja = null, bool sortByUkupnaCena = false, string sortOrder = "asc")
         {
-            /*
+            
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
             }
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator")); // ?
 
             if (roleClaim == null)
             {
-                return Forbid();
+                return Forbid(); // dodati poruku
             }
-            */
+            
             var porudzbine = porudzbinaRepository.GetPorudzbina();
 
             if(PotvrdaPlacanja != null)
@@ -81,14 +81,14 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        //[Authorize(Roles = "Administrator, Korisnik")]
+        //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{Id_porudzbina}")]
         public ActionResult<PorudzbinaDto> GetExactPorudzbina(Guid Id_porudzbina)
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
+            
+            if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
             }
@@ -98,7 +98,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return Forbid();
             }
-             */
+             
             var porudzbina = porudzbinaRepository.GetExactPorudzbina(Id_porudzbina);
 
             if (porudzbina == null)
@@ -117,8 +117,8 @@ namespace EONIS_IT34_2020.Controllers
         [HttpGet("{Id_porudzbina}/{Id_korisnik}/{Id_kontingentKarata}")]
         public ActionResult<PorudzbinaDto> GetPorudzbinaById(Guid Id_porudzbina, Guid Id_korisnik, Guid Id_kontingentKarata)
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
+            
+            if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
             }
@@ -128,7 +128,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return Forbid();
             }
-             */
+             
             var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
 
             if (porudzbina == null)
@@ -144,8 +144,8 @@ namespace EONIS_IT34_2020.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator, Korisnik")]
         public ActionResult<PorudzbinaDto> CreatePorudzbina([FromBody] PorudzbinaCreationDto porudzbinaCreationDto)
         {
@@ -156,7 +156,7 @@ namespace EONIS_IT34_2020.Controllers
 
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -164,8 +164,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); "You don't have permission to create porudzbina."
-                }*/
+                    return Forbid(); //"You don't have permission to create porudzbina."
+                }
 
                 Porudzbina porudzbinaEntity = mapper.Map<Porudzbina>(porudzbinaCreationDto);
                 Porudzbina createdPorudzbina = porudzbinaRepository.CreatePorudzbina(porudzbinaEntity);
@@ -183,15 +183,14 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
         public ActionResult<PorudzbinaDto> UpdatePorudzbina(PorudzbinaUpdateDto porudzbinaUpdateDto)
         {
             try
             {
-                /*
-                 if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -200,8 +199,7 @@ namespace EONIS_IT34_2020.Controllers
                 if (roleClaim == null)
                 {
                     return Forbid(); //"You don't have permission to create porudzbina."
-                }
-                 */
+                }                 
 
                 Porudzbina porudzbinaEntity = mapper.Map<Porudzbina>(porudzbinaUpdateDto);
 
@@ -232,7 +230,7 @@ namespace EONIS_IT34_2020.Controllers
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -241,7 +239,7 @@ namespace EONIS_IT34_2020.Controllers
                 if (roleClaim == null)
                 {
                     return Forbid(); // "You don't have permission to create porudzbina."
-                }*/
+                }
 
                 var porudzbina = porudzbinaRepository.GetPorudzbinaById(Id_porudzbina, Id_korisnik, Id_kontingentKarata);
                 if (porudzbina == null)
@@ -268,8 +266,7 @@ namespace EONIS_IT34_2020.Controllers
         [HttpGet("GetPorudzbinaByKorisnik/{Id_korisnik}")]
         public ActionResult<List<PorudzbinaDto>> GetPorudzbinaByKorisnik(Guid Id_korisnik)
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
+            if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
             }
@@ -279,7 +276,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return Forbid();
             }
-             */
+             
             var porudzbine = porudzbinaRepository.GetPorudzbinaByKorisnik(Id_korisnik);
 
             if (porudzbine == null || porudzbine.Count == 0)

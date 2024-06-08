@@ -62,10 +62,24 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet("{Id_kontingentKarata}")]
+        //[Authorize(Roles = "Administrator")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<KontingentKarataDto> GetKontingentKarataById(Guid Id_kontingentKarata)
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+
             var kontingentKarata = kontingentKarataRepository.GetKontingentKarataById(Id_kontingentKarata);
 
             if (kontingentKarata == null)
@@ -103,8 +117,8 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<KontingentKarataDto> CreateKontingentKarata([FromBody] KontingentKarataCreationDto kontingentKarataCreationDto)
         {
             if(kontingentKarataCreationDto == null)
@@ -114,7 +128,7 @@ namespace EONIS_IT34_2020.Controllers
 
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+               if (!HttpContext.User.Identity.IsAuthenticated)
                {
                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                }
@@ -122,8 +136,8 @@ namespace EONIS_IT34_2020.Controllers
 
                if (roleClaim == null)
                {
-                   return Forbid(); //"You don't have permission to create kontingentKarata."
-               }*/
+                   return Forbid(); 
+               }
 
                 KontingentKarata kontingentKarataEntity = mapper.Map<KontingentKarata>(kontingentKarataCreationDto);
                 kontingentKarataEntity.Id_kontingentKarata = Guid.NewGuid();
@@ -144,13 +158,13 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<KontingentKarataDto> UpdateKontingentKarata(KontingentKarataUpdateDto kontingentKarataUpdateDto) 
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -158,8 +172,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); //"You don't have permission to update kontingentKarata."
-                }*/
+                   return Forbid();
+                }
 
                 KontingentKarata kontingentKarata = mapper.Map<KontingentKarata>(kontingentKarataUpdateDto);
 
@@ -181,15 +195,15 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
         [HttpDelete("{Id_kontingentKarata}")]
         public IActionResult DeleteKontingentKarata(Guid Id_kontingentKarata)
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -197,8 +211,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); //"You don't have permission to delete kontingentKarata."
-                }*/
+                    return Forbid(); 
+                }
 
                 var kontingentKarata = kontingentKarataRepository.GetKontingentKarataById(Id_kontingentKarata);
                 if (kontingentKarata == null)

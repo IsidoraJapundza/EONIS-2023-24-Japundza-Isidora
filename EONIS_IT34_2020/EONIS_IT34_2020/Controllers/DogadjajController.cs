@@ -58,7 +58,7 @@ namespace EONIS_IT34_2020.Controllers
             var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
             if (totalPages < page || page <= 0)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "Dogadjaj successfully deleted."); // izmeniti
+                return StatusCode(StatusCodes.Status204NoContent, "Dogadjaj successfully deleted."); 
             }
             var itemsPerPage = dogadjajiDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
@@ -67,10 +67,24 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet("{Id_dogadjaj}")]
+        //[Authorize(Roles = "Administrator")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<DogadjajDto> GetDogadjajById(Guid Id_dogadjaj)
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+
             var dogadjaj = dogadjajRepository.GetDogadjajById(Id_dogadjaj);
 
             if (dogadjaj == null)
@@ -108,8 +122,8 @@ namespace EONIS_IT34_2020.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<DogadjajDto> CreateDogadjaj([FromBody] DogadjajCreationDto dogadjajCreationDto) 
         {
             if (dogadjajCreationDto == null)
@@ -119,7 +133,7 @@ namespace EONIS_IT34_2020.Controllers
 
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -127,8 +141,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); // "You don't have permission to create dogadjaj."
-                }*/
+                    return Forbid(); 
+                }
 
                 Dogadjaj dogadjajEntity = mapper.Map<Dogadjaj>(dogadjajCreationDto);
                 dogadjajEntity.Id_dogadjaj = Guid.NewGuid();
@@ -148,13 +162,13 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<DogadjajDto> UpdateDogadjaj(DogadjajUpdateDto dogadjajUpdateDto) 
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -162,8 +176,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); //"You don't have permission to update dogadjaj."
-                }*/
+                    return Forbid(); 
+                }
 
                 Dogadjaj dogadjaj = mapper.Map<Dogadjaj>(dogadjajUpdateDto);
 
@@ -186,15 +200,15 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         //[Authorize(Roles = "Administrator")]
         [HttpDelete("{Id_dogadjaj}")]
         public IActionResult DeleteDogadjaj(Guid Id_dogadjaj)
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -202,8 +216,8 @@ namespace EONIS_IT34_2020.Controllers
 
                 if (roleClaim == null)
                 {
-                    return Forbid(); // "You don't have permission to delete dogadjaj."
-                }*/
+                    return Forbid(); 
+                }
 
                 var dogadjaj = dogadjajRepository.GetDogadjajById(Id_dogadjaj);
                 if (dogadjaj == null)

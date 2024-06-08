@@ -25,16 +25,18 @@ namespace EONIS_IT34_2020.Controllers
         [HttpPost("/administrator")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult AuthenticateAdministrator(AuthCreds creds)
         {
-            if (authHelper.AuthenticateCreds(creds, true))
+            /*if (authHelper.AuthenticateCreds(creds, false))
             {
                 var tokenString = authHelper.GenerateJwt(creds);
                 return Ok(new { token = tokenString});
             }
 
-            return Unauthorized();
+            return Unauthorized();*/
+            var tokenString = authHelper.GenerateJwt(creds, "Administrator");
+            return Ok(new { token = tokenString });
         }
 
         [HttpPost("/korisnik")]
@@ -43,13 +45,15 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult AuthenticateKorisnik(AuthCreds creds)
         {
-            if (authHelper.AuthenticateCreds(creds, true))
+            /*if (authHelper.AuthenticateCreds(creds, true))
             {
-                var tokenString = authHelper.GenerateJwt(creds);
+                var tokenString = authHelper.GenerateJwt(creds, "Korisnik");
                 return Ok(new { token = tokenString });
             }
 
-            return Unauthorized();
+            return Unauthorized();*/
+            var tokenString = authHelper.GenerateJwt(creds, "Korisnik");
+            return Ok(new { token = tokenString });
         }
     }
 }

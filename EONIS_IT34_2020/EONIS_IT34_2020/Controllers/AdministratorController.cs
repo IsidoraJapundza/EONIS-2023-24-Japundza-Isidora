@@ -28,23 +28,22 @@ namespace EONIS_IT34_2020.Controllers
         //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult<List<AdministratorDto>> GetAdministrator(int page = 1, int pageSize = 10, bool sortByKorisnickoIme = false, string sortOrder = "asc")
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
-           {
+           
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
-           }
-           var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" ));
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" ));
 
-           if (roleClaim == null)
-           {
+            if (roleClaim == null)
+            {
                return Forbid();
-           }
-           */
-
+            }
+           
             var administratori = administratorRepository.GetAdministrator();
 
             if (sortByKorisnickoIme)
@@ -77,23 +76,23 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("{Id_administrator}")]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[Authorize(Roles = "Administrator")]
         public ActionResult<AdministratorDto> GetAdministratorById(Guid Id_administrator) 
         {
-            /*
-             if (!HttpContext.User.Identity.IsAuthenticated)
+            
+            if (!HttpContext.User.Identity.IsAuthenticated)
             {
                 return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
             }
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator" || c.Value == "Korisnik"));
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
 
             if (roleClaim == null)
             {
                 return Forbid();
             }
-             */
+             
             var administrator = administratorRepository.GetAdministratorById(Id_administrator);
 
             if (administrator == null)
@@ -105,16 +104,29 @@ namespace EONIS_IT34_2020.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet("username/{korisnickoIme}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[Authorize(Roles = "Administrator")]
         public ActionResult<AdministratorDto> GetAdministratorByKorisnickoIme(string korisnickoIme)
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
 
             var administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoIme);
 
             if (administrator == null)
             {
-                return NotFound($"Administrator with the specified KorisnickoIme {administrator.KorisnickoImeAdministratora} not found.");
+                return NotFound();
             }
 
             return mapper.Map<AdministratorDto>(administrator);
@@ -123,12 +135,25 @@ namespace EONIS_IT34_2020.Controllers
  
         [HttpPost]
         [Consumes("application/json")]
+        //[Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<AdministratorDto> CreateAdministrator([FromBody] AdministratorCreationDto administratorCreationDto) 
         {
+            /*if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
 
-            if(administratorCreationDto == null)
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }*/
+
+            if (administratorCreationDto == null)
             {
                 return BadRequest("Invalid data provided!");
             }
@@ -137,12 +162,6 @@ namespace EONIS_IT34_2020.Controllers
             {
                 Administrator createdAdministrator = administratorRepository.CreateAdministrator(administratorCreationDto);
                 return mapper.Map<AdministratorDto>(createdAdministrator);
-
-                /*Administrator administratorEntity = mapper.Map<Administrator>(administratorCreationDto);
-                administratorEntity.Id_administrator = Guid.NewGuid();
-                AdministratorDto confirmation = administratorRepository.CreateAdministrator(administratorEntity);
-
-                return Ok(mapper.Map<AdministratorDto>(confirmation));*/
             }
             catch (Exception ex)
             {
@@ -156,14 +175,14 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<AdministratorDto> UpdateAdministrator(AdministratorUpdateDto administratorUpdateDto) 
         {
             try
             {
-                /*
-                 if (!HttpContext.User.Identity.IsAuthenticated)
+                
+               if (!HttpContext.User.Identity.IsAuthenticated)
                {
                    return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                }
@@ -173,7 +192,6 @@ namespace EONIS_IT34_2020.Controllers
                {
                    return Forbid(); // "You don't have permission to update administrator."
                } 
-                */
 
                 Administrator administrator = mapper.Map<Administrator>(administratorUpdateDto);
                 var updatedAdministrator = administratorRepository.UpdateAdministrator(administratorUpdateDto);
@@ -195,13 +213,15 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{Id_administrator}")]
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteAdministrator(Guid Id_administrator)
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -210,7 +230,8 @@ namespace EONIS_IT34_2020.Controllers
                 if (roleClaim == null)
                 {
                     return Forbid();
-                }*/
+                }
+
                 Administrator administrator = administratorRepository.GetAdministratorById(Id_administrator);
                 if (administrator == null)
                 {
@@ -236,7 +257,7 @@ namespace EONIS_IT34_2020.Controllers
         {
             try
             {
-                /*if (!HttpContext.User.Identity.IsAuthenticated)
+                if (!HttpContext.User.Identity.IsAuthenticated)
                 {
                     return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
                 }
@@ -245,7 +266,8 @@ namespace EONIS_IT34_2020.Controllers
                 if (roleClaim == null)
                 {
                     return Forbid();
-                }*/
+                }
+
                 Administrator administrator = administratorRepository.GetAdministratorByKorisnickoIme(korisnickoIme);
                 if (administrator == null)
                 {

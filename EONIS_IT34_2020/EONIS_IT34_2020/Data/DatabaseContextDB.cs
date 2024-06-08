@@ -37,12 +37,6 @@ namespace EONIS_IT34_2020.Data
 
             modelBuilder.Entity<KontingentKarata>().HasKey(pk => new { pk.Id_dogadjaj, pk.Id_administrator });
 
-            /* ispraviti
-             * modelBuilder.Entity<KontingentKarata>()
-                .HasOne(a => a.Administrator)
-                .HasForeignKey(d =>  d.Id_administrator)
-                .OnDelete(DeleteBehavior.SetNull); // Postavlja vrednost na null umesto brisanja*/
-
             modelBuilder.Entity<Porudzbina>().HasKey(pk => new { pk.Id_korisnik, pk.Id_kontingentKarata });
 
             modelBuilder.Entity<Porudzbina>()
@@ -53,7 +47,7 @@ namespace EONIS_IT34_2020.Data
         }
 
         //ispraviti
-        /*private Tuple<string, string> HashPassword(string password)
+        private Tuple<string, string> HashPassword(string password)
         {
             var sBytes = new byte[password.Length];
             new RNGCryptoServiceProvider().GetNonZeroBytes(sBytes);
@@ -66,6 +60,6 @@ namespace EONIS_IT34_2020.Data
                 Convert.ToBase64String(derivedBytes.GetBytes(256)),
                 salt
             );
-        }*/
+        }
     }
 }

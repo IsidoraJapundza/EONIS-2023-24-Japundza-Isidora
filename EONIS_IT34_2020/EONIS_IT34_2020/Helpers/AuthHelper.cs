@@ -26,21 +26,22 @@ namespace EONIS_IT34_2020.Helpers
             if(isEmployee && administratorRepository.AdministratorWithCredentialsExists(creds.korisnickoIme, creds.lozinka))
             {
                 return true;
-            } else if(!isEmployee && korisnikRepository.KorisnikWithCredentialsExists(creds.korisnickoIme, creds.lozinka))
+            } 
+            else if(!isEmployee && korisnikRepository.KorisnikWithCredentialsExists(creds.korisnickoIme, creds.lozinka))
             {
                 return true;
             }
             return false;
         }
 
-        public string GenerateJwt(AuthCreds creds)//, string role)
+        public string GenerateJwt(AuthCreds creds, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, creds.korisnickoIme),
-                    //new Claim(ClaimTypes.Role, role)
+                    new Claim(ClaimTypes.Role, role)
                 };
 
             var token = new JwtSecurityToken(configuration["Jwt:Issuer"],

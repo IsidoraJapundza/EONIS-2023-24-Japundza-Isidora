@@ -33,7 +33,7 @@ namespace EONIS_IT34_2020.Data.KontingentKarataRepository
 
         public List<KontingentKarata> GetKontingentKarataByNaziv(string naziv)
         {
-            return context.KontingentKarata.Where(e => e.NazivKarte == naziv).ToList();
+            return context.KontingentKarata.Where(e => e.NazivKarte.Contains(naziv)).ToList();
         }
 
         public KontingentKarata CreateKontingentKarata(KontingentKarata kontingentKarata)

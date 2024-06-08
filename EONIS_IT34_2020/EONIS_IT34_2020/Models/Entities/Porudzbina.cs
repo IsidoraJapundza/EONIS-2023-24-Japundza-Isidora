@@ -13,8 +13,8 @@ namespace EONIS_IT34_2020.Models.Entities
         public TimeOnly VremePorudzbine { get; set; }
         public int BrojKarata { get; set; }
         public int UkupnaCena { get; set; } 
-        public String StatusPorudzbine { get; set; } // 'U toku', 'Završena', 'Otkazana'
-        public String? PotvrdaPlacanja { get; set; } // 'Za naplatu', 'Plaćeno'
+        public String StatusPorudzbine { get; set; } // 'U toku', 'Završena', 'Otkazana' - izmeniti?
+        public String? PotvrdaPlacanja { get; set; } // 'Za naplatu', 'Placeno' - izmeniti?
         public String? MetodaIsporuke { get; set; }
         public String? AdresaIsporuke { get; set; }
         public String? DodatneNapomene { get; set; }

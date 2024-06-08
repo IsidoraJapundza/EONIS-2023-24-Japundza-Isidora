@@ -6,6 +6,8 @@
         public String ImeAdministratora { get; set; }
         public String PrezimeAdministratora { get; set; }
         public String KorisnickoImeAdministratora { get; set; }
+        public byte[]? LozinkaAdministratoraHashed { get; set; }
+
         public String MejlAdministratora { get; set; }
         public String KontaktAdministratora { get; set; }
         public String? StatusAktivnosti { get; set; }

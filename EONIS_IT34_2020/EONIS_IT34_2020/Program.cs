@@ -13,11 +13,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -41,7 +36,13 @@ builder.Services.AddScoped<IKorisnikRepository, KorisnikRepository>();
 builder.Services.AddScoped<IPorudzbinaRepository, PorudzbinaRepository>();
 builder.Services.AddScoped<IAuthHelper, AuthHelper>();
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+
 builder.Services.AddSingleton<IConfiguration>(configuration);
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication(options =>
