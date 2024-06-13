@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.AdministratorRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;

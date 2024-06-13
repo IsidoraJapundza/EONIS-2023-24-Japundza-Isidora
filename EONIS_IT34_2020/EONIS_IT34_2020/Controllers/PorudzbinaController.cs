@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using EONIS_IT34_2020.Data.KontingentKarataRepository;
 using EONIS_IT34_2020.Data.PorudzbinaRepository;
-using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
 using EONIS_IT34_2020.Models.DTOs.Porudzbina;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -264,7 +262,7 @@ namespace EONIS_IT34_2020.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("GetPorudzbinaByKorisnik/{Id_korisnik}")]
-        public ActionResult<List<PorudzbinaDto>> GetPorudzbinaByKorisnik(Guid Id_korisnik)
+        public ActionResult<List<PorudzbinaDto>> GetPorudzbinaByKorisnik(Guid Id_korisnik, int page = 1, int pageSize = 10)
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
@@ -276,7 +274,7 @@ namespace EONIS_IT34_2020.Controllers
             {
                 return Forbid();
             }
-             
+
             var porudzbine = porudzbinaRepository.GetPorudzbinaByKorisnik(Id_korisnik);
 
             if (porudzbine == null || porudzbine.Count == 0)
@@ -286,12 +284,63 @@ namespace EONIS_IT34_2020.Controllers
             }
 
             List<PorudzbinaDto> porudzbineDto = new List<PorudzbinaDto>();
-            foreach(var porudzbina in porudzbine)
+            foreach (var porudzbina in porudzbine)
             {
                 porudzbineDto.Add(mapper.Map<PorudzbinaDto>(porudzbina));
             }
 
-            return mapper.Map<List<PorudzbinaDto>>(porudzbineDto);
+            var totalCount = porudzbineDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = porudzbineDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
         }
+
+        /*[HttpGet("administrator/{Id_administrator}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[Authorize(Roles = "Administrator")]
+        public ActionResult<List<PorudzbinaDto>> GetPorudzbineByAdministrator(string zaposleniID, int page = 1, int pageSize = 10)
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Da biste izvršili operaciju, morate kreirati nalog!");
+            }
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role && (c.Value == "Administrator"));
+
+            if (roleClaim == null)
+            {
+                return Forbid();
+            }
+
+            var porudzbine = porudzbinaRepository.GetPorudzbinaByAdministrator(Id_administrator);
+
+            if (porudzbine == null || porudzbine.Count == 0)
+            {
+                return NotFound("Porudzbina with the specified Korisnik not found.");
+
+            }
+
+            List<PorudzbinaDto> porudzbineDto = new List<PorudzbinaDto>();
+            foreach (var porudzbina in porudzbine)
+            {
+                porudzbineDto.Add(mapper.Map<PorudzbinaDto>(porudzbina));
+            }
+
+            var totalCount = porudzbineDto.Count;
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            if (totalPages < page || page <= 0)
+            {
+                return NoContent();
+            }
+            var itemsPerPage = porudzbineDto.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(itemsPerPage);
+        }*/
     }
 }

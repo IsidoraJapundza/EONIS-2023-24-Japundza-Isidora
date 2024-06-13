@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Data.DogadjajRepository;
-using EONIS_IT34_2020.Data.KorisnikRepository;
-using EONIS_IT34_2020.Data.PorudzbinaRepository;
 using EONIS_IT34_2020.Models.DTOs.Dogadjaj;
-using EONIS_IT34_2020.Models.DTOs.Korisnik;
-using EONIS_IT34_2020.Models.DTOs.Porudzbina;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;

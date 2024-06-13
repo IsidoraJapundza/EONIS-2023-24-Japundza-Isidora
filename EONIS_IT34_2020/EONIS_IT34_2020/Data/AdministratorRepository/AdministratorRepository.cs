@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Models.DTOs.Administrator;
-using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using System.Data.SqlTypes;
 using System.Security.Cryptography;

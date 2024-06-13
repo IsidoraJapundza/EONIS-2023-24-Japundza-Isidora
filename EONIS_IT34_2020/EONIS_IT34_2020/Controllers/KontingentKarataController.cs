@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using EONIS_IT34_2020.Data.KontingentKarataRepository;
-using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Models.DTOs.KontingentKarata;
-using EONIS_IT34_2020.Models.DTOs.Korisnik;
 using EONIS_IT34_2020.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
