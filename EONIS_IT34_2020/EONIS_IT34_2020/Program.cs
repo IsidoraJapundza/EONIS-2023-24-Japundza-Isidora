@@ -5,6 +5,7 @@ using EONIS_IT34_2020.Data.KontingentKarataRepository;
 using EONIS_IT34_2020.Data.KorisnikRepository;
 using EONIS_IT34_2020.Data.PorudzbinaRepository;
 using EONIS_IT34_2020.Helpers;
+using EONIS_IT34_2020.Models.Stripe;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,6 +29,17 @@ builder.Services.AddDbContext<DatabaseContextDB>(options =>
     {
         sqlServerOptionsAction.EnableRetryOnFailure();
     });
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllHeaders",
+          builder =>
+          {
+              builder.AllowAnyOrigin()
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
+          });
 });
 
 builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
