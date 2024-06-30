@@ -1,0 +1,42 @@
+.paging {
+    text-align: center;
+    margin-top: 10px !important;
+}
+
+.paging button {
+    margin: 10px;
+}
+
+.search_bar {
+    margin-bottom: 10px;
+    width: 60%;
+}
+
+.filter_wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #858261;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #fff;
+    background-color: #858261;
+    border-color: #858261;
+    text-decoration: none;
+}
+
+a:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}

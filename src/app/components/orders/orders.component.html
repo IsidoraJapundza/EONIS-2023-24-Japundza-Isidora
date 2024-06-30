@@ -1,0 +1,40 @@
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light orders_nav">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Porudzbine</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Dogadjaji</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add-event">Dodavanje dogadjaja</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Datum porudzbine</th>
+                <th scope="col">Broj karata</th>
+                <th scope="col">Cena</th>
+                <th scope="col">Status porudzbine</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of orders">
+                <td>{{item.datumPorudzbine}}</td>
+                <td>{{item.brojKarata}}</td>
+                <td>{{item.ukupnaCena}} din</td>
+                <td>{{item.statusPorudzbine}}</td>
+                <td><button class="btn btn-primary" (click)="onRemoveOrder(item)">OBRISI</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

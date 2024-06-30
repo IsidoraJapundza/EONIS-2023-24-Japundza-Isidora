@@ -1,0 +1,46 @@
+<div>
+    <div *ngIf="events && events.length > 0">
+        <div class="filter_wrapper">
+            <div class="search_bar">
+                <input class="form-control me-2" id="search" [(ngModel)]="searchTerm" (input)="filterEvents()" placeholder="Pretrazi dogadjaje">
+            </div>
+            <div class="sorting">
+                <select class="form-select" (change)="onSortChange($event)">
+                  <option value="naziv">Sortiraj po nazivu</option>
+                  <option value="datum">Sortiraj po datumu</option>
+                  <option value="mesto">Sortiraj po mestu odrzavanja</option>
+                </select>
+            </div>
+            <a [href]="'payments/' + user.id_korisnik">Porudzbine u toku</a>
+        </div>
+
+        <div>
+            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                <ngb-panel *ngFor="let event of filteredEvents" id="ngb-panel-{{event.id_dogadjaj}}" title="{{event.nazivSportskogDogadjaja}}">
+                    <ng-template ngbPanelContent>
+                        <div>
+                            <p><strong>Datum:</strong> {{event.datumOdrzavanja}}</p>
+                            <p><strong>Vreme:</strong> {{event.vremeOdrzavanja}}</p>
+                            <p><strong>Predvidjeno Vreme Završetka:</strong> {{event.predvidjenoVremeZavrsetka}}</p>
+                            <p><strong>Mesto Održavanja:</strong> {{event.mestoOdrzavanja}}</p>
+                            <div class="ticket_data">
+                                <p><strong>Naziv Karte:</strong> {{ getNazivKarte(event.id_dogadjaj) }}</p>
+                                <p><strong>Sektor:</strong> {{ getSektor(event.id_dogadjaj) }}</p>
+                                <p><strong>Ulaz:</strong> {{ getUlaz(event.id_dogadjaj) }}</p>
+                                <p><strong>Br karata:</strong> {{ getBrKarata(event.id_dogadjaj) }}</p>
+                            </div>
+                            <button class="btn btn-primary" (click)="onOrderTicket(event.id_dogadjaj)">Poruci</button>
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+        </div>
+
+        <div class="paging">
+            <button class="btn btn-primary" *ngIf="this.paging > 1" (click)="onChangePage(false)">Prethodna stranica</button>
+            <button class="btn btn-primary" (click)="onChangePage(true)">Sledeca stranica</button>
+        </div>
+
+
+    </div>
+</div>

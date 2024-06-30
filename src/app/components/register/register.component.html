@@ -1,0 +1,52 @@
+<h1 class="register_header">Registracija korisnika</h1>
+
+<div class="register-forms">
+    <form class="row g-3" [formGroup]="registrationForm">
+        <div class="form-group col-md-6">
+            <label class="form-label">Ime</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="Unesite ime">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Prezime</label>
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Unesite prezime">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Korisnicko ime</label>
+            <input type="text" class="form-control" formControlName="userName" placeholder="Unesite korisnicko ime">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Lozinka</label>
+            <input type="password" class="form-control" formControlName="password" placeholder="Unesite lozinku">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" placeholder="Unesite email">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Kontakt telefon</label>
+            <input type="text" class="form-control" formControlName="phone" placeholder="Unesite kontakt telefon">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Adresa (nije admin polje)</label>
+            <input type="text" class="form-control" formControlName="address" placeholder="Unesite adresu">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Prebivaliste (nije admin polje)</label>
+            <input type="text" class="form-control" formControlName="homeTown" placeholder="Unesite prebivaliste">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Postanski broj (nije admin polje)</label>
+            <input type="number" class="form-control" formControlName="postalCode" placeholder="Unesite petocifren postanski broj">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">Datum rodjenja (nije admin polje)</label>
+            <input type="date" class="form-control" formControlName="dateOfBirth">
+        </div>
+
+
+        <div class="submit-btns">
+            <button type="submit" class="btn btn-primary" (click)="onRegister(false)">Registruj se</button>
+            <button type="submit" class="btn btn-primary" (click)="onRegister(true)">Registruj se kao ADMIN</button>
+        </div>
+    </form>
+</div>

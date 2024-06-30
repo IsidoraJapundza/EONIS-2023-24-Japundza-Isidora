@@ -1,0 +1,33 @@
+body {
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    background: url('./assets/bg.png');
+}
+
+.submit-btns {
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-btns button {
+    margin-bottom: 10px;
+}
+
+button {
+    background: #A29F6F !important;
+    border: none !important;
+}
+
+.orders_nav {
+    margin-bottom: 30px;
+}
+
+.ticket_data {
+    padding: 10px;
+    border: 2px solid #A29F6F;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}

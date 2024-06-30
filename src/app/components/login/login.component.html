@@ -1,0 +1,24 @@
+<h1 class="login_header">Korisnicka prijava</h1>
+
+<form [formGroup]="loginForm">
+    <div class="form-group">
+        <label class="form-label">Korisnicko ime</label>
+        <input type="email" class="form-control" formControlName="korisnickoIme" placeholder="Unesi korisnicko ime">
+
+        <span *ngIf="!email.valid && email.touched" class="error-block">
+          Molimo Vas da unesete pravilno korisnicko ime!
+        </span>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Lozinka</label>
+        <input type="password" class="form-control" formControlName="lozinka" placeholder="Unesite lozinku">
+
+        <span *ngIf="!password.valid && password.touched" class="error-block">
+          Molimo Vas da unesete pravilno lozinku!
+        </span>
+    </div>
+    <div class="submit-btns">
+        <button type="submit" class="btn btn-primary" (click)="onLogin(false)">Prijavi se</button>
+        <button type="submit" class="btn btn-primary" (click)="onLogin(true)">Prijavi se kao ADMIN</button>
+    </div>
+</form>

@@ -1,0 +1,39 @@
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light orders_nav">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Porudzbine</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Dogadjaji</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add-event">Dodavanje dogadjaja</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+        <ngb-panel *ngFor="let event of events" id="ngb-panel-{{event.id_dogadjaj}}" title="{{event.nazivSportskogDogadjaja}}">
+            <ng-template ngbPanelContent>
+                <div>
+                    <p><strong>Datum:</strong> {{event.datumOdrzavanja}}</p>
+                    <p><strong>Vreme:</strong> {{event.vremeOdrzavanja}}</p>
+                    <p><strong>Predvidjeno Vreme Završetka:</strong> {{event.predvidjenoVremeZavrsetka}}</p>
+                    <p><strong>Mesto Održavanja:</strong> {{event.mestoOdrzavanja}}</p>
+                    <div class="ticket_data">
+                        <p><strong>Naziv Karte:</strong> {{ getNazivKarte(event.id_dogadjaj) }}</p>
+                        <p><strong>Sektor:</strong> {{ getSektor(event.id_dogadjaj) }}</p>
+                        <p><strong>Ulaz:</strong> {{ getUlaz(event.id_dogadjaj) }}</p>
+                        <p><strong>Br karata:</strong> {{ getBrKarata(event.id_dogadjaj) }}</p>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+
+</div>

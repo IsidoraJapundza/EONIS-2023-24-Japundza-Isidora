@@ -1,0 +1,38 @@
+.pay_btn {
+    margin-top: 20px;
+    width: 30%;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: bold;
+}
+
+.pay_dd {
+    margin-top: 40px;
+    display: flex;
+}
+
+.pay_dd label {
+    width: 30%;
+}
+
+.pay_form {
+    text-align: center;
+}
+
+#card-element {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.pay_stripe_form {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pay_stripe_form div {
+    width: 80%;
+    margin-top: 0px !important;
+}

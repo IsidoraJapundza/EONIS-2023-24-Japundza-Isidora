@@ -1,0 +1,18 @@
+<div class="pay_form">
+    <h1 class="login_header">Placanje porudzbina</h1>
+
+    <div class="form-group pay_dd">
+        <label class="form-label">Izaberi porudzbinu za placanje</label>
+        <select class="form-select" (change)="onOrderToPayChange($event)">
+    <option *ngFor="let order of orders" [value]="order.id_porudzbina">Porudzbina kreirana - {{ order.datumPorudzbine }}; Cena - {{ order.ukupnaCena }} din</option>
+  </select>
+    </div>
+
+    <div>
+        <div class="pay_stripe_form">
+            <label>Stripe Payment</label>
+            <div id="card-element"></div>
+        </div>
+        <button class="btn btn-primary pay_btn" (click)="onPay()">Plati</button>
+    </div>
+</div>
